@@ -18,9 +18,9 @@ def get_game():
     game = None
 
     os = sys.platform
-    engine = chess.engine.SimpleEngine.popen_uci("C:\\Users\\SchwMi001\\Documents\\Chess-Analyzer\\engines\\" + input("Enter engine path: "))
+    engine = chess.engine.SimpleEngine.popen_uci(input("Enter engine path: "))
     dep = int(input("Enter the depth of the engine: "))
-    file = "C:\\Users\\SchwMi001\\Documents\\Chess-Analyzer\\games\\" + input("Please input your filename: ") + ".pgn"
+    file = input("Please input your filename: ")
     try:
         f = open(file, "r")
     except:
