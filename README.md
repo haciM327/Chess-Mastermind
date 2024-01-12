@@ -1,4 +1,4 @@
-# StratoChess Analyzer
+# Chess Mastermind
 Chess Mastermind is a project that is designed to help chess players get better at the game. Chess Mastermind does this by you inputting a chess game and it will tell you what you did right and what you did wrong. It can tell you what you should've done instead and how you can improve. It is a similar program to chess.com's game review however this program is entirely free and open-source, it can use any engine you want, and will eventually (although not yet) be able to give you in depth help with chess stratgies and tactics.
 
 # Installation
