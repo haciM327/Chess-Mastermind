@@ -8,13 +8,17 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
+set(CMAKE_PREFIX_PATH C:\\Qt\\6.6.1\\mingw_64)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ./)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 
+add_subdirectory(analyzer)
+file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
