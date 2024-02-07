@@ -98,7 +98,7 @@ void MainWindow::on_AddGame_clicked()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    std::string path = "./Games/";
+    std::string path = "./games/";
     path += ui->lineEdit->text().toStdString().c_str();
     std::cout << path;
     std::ofstream outfile (path);
@@ -107,6 +107,13 @@ void MainWindow::on_lineEdit_returnPressed()
 
     outfile.close();
 
+    std::string game;
+    path = ".\\games";
+    ui->GameList->clear();
+    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+        game = entry.path().string();
+        ui->GameList->addItem(QString::fromStdString(game));
+    }
     ui->AddGame->show();
     ui->lineEdit->hide();
     ui->plainTextEdit->hide();
