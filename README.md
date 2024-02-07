@@ -5,4 +5,11 @@ Chess Mastermind is a project that is designed to help chess players get better 
 No installer file is provided yet, instead a portable binary is provided which can be manually extracted and installed anywhere
 
 # Compilation
-The benifits of compilation is support for other platforms than windows alone. No build system is provided (coming soon) so you have to compile manually. Python3.10 libraries are required (other version have not been tested). The python libraries must be linked but other than that, use your favorite c/c++ compiler and go ahead. Please note that platforms other than windows, pythons other than 3.10, and compilers other than g++ have not been tested.
+Compiling from source is not recomended however, if you desire to do so the easiest way is to open the project in QT Creator and compile it from there. Compiling from the command line can be done though.
+1. First create and enter a build directory, i.e.\
+  ```mkdir build``` and ```cd build```
+2. Run cmake from the build directory\
+   ```cmake ..```
+3. Build the project using release configuration\
+  ```cmake --build . -configure Release```
+4. Run the app!
