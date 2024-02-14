@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
+
 project(StratoChess-Analyzer VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
@@ -17,8 +18,11 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 add_subdirectory(analyzer)
 file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+file(COPY ./analyzer/display.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+file(COPY ./analyzer/pieces.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
 file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp

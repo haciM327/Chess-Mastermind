@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->GameList->addItem(QString::fromStdString(game));
     }
 
+
 }
 
 MainWindow::~MainWindow()
@@ -83,6 +84,8 @@ void MainWindow::on_Depth_returnPressed()
     cmd += MainWindow::game;
     MainWindow::hide();
     std::system(cmd.c_str());
+    ui->pushButton->show();
+    ui->AddGame->show();
     MainWindow::show();
 }
 
