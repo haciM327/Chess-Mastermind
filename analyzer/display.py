@@ -1,3 +1,5 @@
+import os
+os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = "hide"
 import pygame
 import pieces
 import chess
@@ -97,7 +99,6 @@ def setup_game(headers):
 def move_ahead(move, piece_list):
     pos = move[:2].upper()
     dest = move[-2:].upper()
-    print(pos,dest)
     key = ["A", "B", "C", "D", "E", "F", "G", "H"]
     for i in piece_list:
         if i.coordinates == list(pos):
@@ -129,7 +130,6 @@ def display_info(ui, info_list, cmove, headers):
     CYAN = pygame.Color((0,255,239))
     GREEN = pygame.Color((0,255,0))
     RED = pygame.Color((255,0,0))
-    print(info_list[cmove])
     ui.blit(font.render(info_list[cmove][0].__str__(), 1, WHITE), (970, 100))
     ui.blit(font.render(info_list[cmove][1].__str__(), 1, WHITE), (970, 200))
     ui.blit(font.render(info_list[cmove][2], 1, WHITE), (970, 300))
@@ -165,7 +165,6 @@ def main_loop(file, info_list):
                         move_ahead(moves[cmove+1], piece_list)
                         cmove += 1
                         ran = True
-
                         ui.fill((0,0,0))
                         ui = display_info(ui, info_list, cmove, headers)
                         window.blit(ui, (0,0))

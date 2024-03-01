@@ -2,6 +2,7 @@ import chess
 import chess.pgn
 import chess.engine
 import sys
+import time
 
 import display
 
@@ -39,14 +40,20 @@ def get_game(e,d,g):
 def analyze(f):
     global game
     board = chess.Board()
-    moves = game.mainline_moves()
+    mainline_moves = game.mainline_moves()
     move = 0
     player = chess.WHITE
     lasteval = 0
     cureval = 0
     info_list = []
     move_info_list = []
+    elapsed = []
+    times = []
+    moves = []
+    for i in mainline_moves:
+        moves.append(i)
     for move in moves:
+        times.append(time.time())
         eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=2)
         best_move = eval[0]["pv"][0]
         if len(eval) > 1:
@@ -63,7 +70,16 @@ def analyze(f):
         move_info_list.append(get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board))
         lasteval = cureval
         info_list.append(move_info_list)
-        move_info_list = [] 
+        move_info_list = []
+        times.append(time.time())
+        elapsed.append(times[1]-times[0])
+        sys.stdout.write("\033[F")
+        sys.stdout.write("\033[K")
+        sys.stdout.write("\033[F")
+        sys.stdout.write("\033[K")
+        print(f"{moves.index(move)/len(moves)*100:.2f}% complete!\nAbout {get_time(elapsed, moves, move)}until completed!")
+        times = []
+        
     try:
         display.main_loop(f, info_list)
     except Exception as e:
@@ -124,9 +140,35 @@ def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, bo
         if eval_change >= -60:
             return "Inaccuracy!"
 
+def get_time(elapsed, moves, move):
+    return_value = ""
+    avg_sec = sum(elapsed)/len(elapsed)*(len(moves)-moves.index(move))
+    if avg_sec > 60:
+        avg_min = (avg_sec/60)
+        avg_sec = avg_sec%60
+        return_value += f"{int(avg_sec)} seconds "
+        if avg_min > 60:
+            avg_hour = avg_min/60
+            avg_min = avg_min%60
+            return_value = f"{int(avg_min)} minutes " + return_value
+            if avg_hour > 24:
+                avg_day = avg_hour/24
+                avg_hour = avg_hour%24
+                return_value = f"{int(avg_hour)} hours " + return_value
+                return_value = f"{int(avg_day)} days " + return_value
+            else:
+                return_value = f"{int(avg_hour)} hours " + return_value
+        else:    
+            return_value = f"{int(avg_min)} minutes " + return_value
+    else:
+        return_value += f"{int(avg_sec)} seconds "
+    
+    return return_value
+
+
 def close():
     engine.quit()
     sys.exit()
 if __name__ == "__main__":
-    get_game("./engines/stockfish.exe", 1, "./games/example.pgn")
+    get_game("../engines/stockfish.exe", 100, "../games/example.pgn")
 
