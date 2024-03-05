@@ -67,6 +67,6 @@ Install you favorite c/c++ compiler whether that be mingw or msvc. Install cmake
 
 4. Build the files
 
-   ```cmake --build . --config Release
+   ```cmake --build . --config Release```
 
 5. All done! you have now build the project and can run it whenever. You can install it to any directory you want.
