@@ -3,7 +3,6 @@
 #include <qdebug.h>
 #include <QtGlobal>
 #include <bits/stdc++.h>
-#include <Windows.h>
 #include <filesystem>
 #include <fstream>
 
