@@ -78,7 +78,7 @@ void MainWindow::on_Depth_returnPressed()
     #ifdef _WIN32 || _WIN64
         cmd = "analyzer/analyze.exe ";
     #else
-        cmd = "analyzer/analyze.exe";
+        cmd = "./analyzer/analyze";
     #endif
     cmd += MainWindow::engine;
     cmd += " ";
