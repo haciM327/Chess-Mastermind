@@ -75,7 +75,11 @@ void MainWindow::on_Depth_returnPressed()
     strcpy(MainWindow::depth, ui->Depth->text().toStdString().c_str());
     ui->Depth->hide();
     std::string cmd;
-    cmd = "analyzer/analyze.exe ";
+    #ifdef _WIN32 || _WIN64
+        cmd = "analyzer/analyze.exe ";
+    #else
+        cmd = "analyzer/analyze.exe";
+    #endif
     cmd += MainWindow::engine;
     cmd += " ";
     cmd += MainWindow::depth;
