@@ -12,7 +12,7 @@ Installer files are available for Windows and Linux. Double-click to install. On
 
 ## Prerequisites
 
-To compile from source you will need some basic tools like cmake, qt6, qt6-widgets, a c/c++-compiler, python3.10, and git.
+To compile from source you will need some basic tools like cmake, qt6, qt6-widgets, a c/c++-compiler, python3.10, and git. Python also has to have chess and pygame installed. They can be installed like ```python -m pip install chess pygame``` 
 
 ### Debian or Ubuntu based Linux
 
