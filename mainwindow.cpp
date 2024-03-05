@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lineEdit->hide();
     ui->plainTextEdit->hide();
     std::string engine;
-    std::string path = ".\\engines";
+    std::string path = "./engines";
     for (const auto & entry : std::filesystem::recursive_directory_iterator(path)) {
         //std::cout << entry.path() << std::endl;
         //std::cout << "hi\n";
@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent)
         ui->EnginesList->addItem(QString::fromStdString(engine));
     }
     std::string game;
-    path = ".\\games";
+    path = "./games";
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         game = entry.path().string();
         ui->GameList->addItem(QString::fromStdString(game));
@@ -75,7 +75,7 @@ void MainWindow::on_Depth_returnPressed()
     strcpy(MainWindow::depth, ui->Depth->text().toStdString().c_str());
     ui->Depth->hide();
     std::string cmd;
-    cmd = "analyzer\\analyze.exe ";
+    cmd = "analyzer/analyze.exe ";
     cmd += MainWindow::engine;
     cmd += " ";
     cmd += MainWindow::depth;
@@ -110,7 +110,7 @@ void MainWindow::on_lineEdit_returnPressed()
     outfile.close();
 
     std::string game;
-    path = ".\\games";
+    path = "./games";
     ui->GameList->clear();
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         game = entry.path().string();
