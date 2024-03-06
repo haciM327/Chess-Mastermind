@@ -20,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     #ifdef _WIN32 || WIN64
         std::string path = "./engines";
     #else
-        std::string path = "../share/chess-mastermind/engines"
+        std::string path = "../share/chess-mastermind/engines";
     #endif
     for (const auto & entry : std::filesystem::recursive_directory_iterator(path)) {
         //std::cout << entry.path() << std::endl;
