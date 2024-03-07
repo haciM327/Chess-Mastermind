@@ -10,6 +10,8 @@ Installer files are available for Windows and Linux. Double-click to install. On
 
 # Compilation
 
+If you intend on compiling from source, please use the source code that comes with the release do not clone the repository as the current code has a high liklihood of not building correctly
+
 ## Prerequisites
 
 To compile from source you will need some basic tools like cmake, qt6, qt6-widgets, a c/c++-compiler, python3.10, and git. Python also has to have chess and pygame installed. They can be installed like ```python -m pip install chess pygame``` 
@@ -49,11 +51,8 @@ I don't know, use yum or whatever.
 Install you favorite c/c++ compiler whether that be mingw or msvc. Install cmake and python from [cmake.org](cmake.org) and [python.org](python.org) respectively. Install github desktop from github or whatever git you use. Open up powershell and follow the compilation steps below
 
 ## Compiling
-1. clone the repository and move into it
 
-   ```git clone https://github.com/L3g0M4r10/Chess-Mastermind.git```
-
-   or use github desktop to clone
+1. Move into the repository with:
 
    ```cd Chess-Mastermind```
    
