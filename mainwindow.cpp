@@ -17,11 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->lineEdit->hide();
     ui->plainTextEdit->hide();
     std::string engine;
-    #ifdef _WIN32 || WIN64
+    //#ifdef _WIN32 || WIN64
         std::string path = "./engines";
-    #else
-        std::string path = "../share/chess-mastermind/engines";
-    #endif
+    //#else
+        //std::string path = "../share/chess-mastermind/engines";
+    //#endif
     for (const auto & entry : std::filesystem::recursive_directory_iterator(path)) {
         //std::cout << entry.path() << std::endl;
         //std::cout << "hi\n";
@@ -29,11 +29,11 @@ MainWindow::MainWindow(QWidget *parent)
         ui->EnginesList->addItem(QString::fromStdString(engine));
     }
     std::string game;
-    #ifdef _WIN32 || WIN64
+    //#ifdef _WIN32 || WIN64
         path = "./games";
-    #else
-        path = "../share/chess-mastermind/games";
-    #endif
+    //#else
+        //path = "../share/chess-mastermind/games";
+    //#endif
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         game = entry.path().string();
         ui->GameList->addItem(QString::fromStdString(game));
@@ -112,11 +112,11 @@ void MainWindow::on_AddGame_clicked()
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    #ifdef _WIN32 || WIN64
+    //#ifdef _WIN32 || WIN64
         std::string path = "./games";
-    #else
-        std::string path = "../share/chess-mastermind/games";
-    #endif
+    //#else
+    //    std::string path = "../share/chess-mastermind/games";
+    //#endif
     path += ui->lineEdit->text().toStdString().c_str();
     std::ofstream outfile (path);
 
