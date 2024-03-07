@@ -170,5 +170,5 @@ def close():
     engine.quit()
     sys.exit()
 if __name__ == "__main__":
-    get_game("../engines/stockfish.exe", 100, "../games/example.pgn")
+    get_game("../engines/stockfish-windows-x86-64-sse41-popcnt.exe", 1, "../games/example.pgn")
 

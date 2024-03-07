@@ -14,4 +14,4 @@ class piece():
         alpha = alpha.upper()
         self.coordinates = [alpha, num]
         num_key = [7,6,5,4,3,2,1,0]
-        self.pos = (7.5+key.index(alpha) * 75), 7.5+((num_key.index(int(num)-1)*75))
+        self.pos = (7.5+key.index(alpha) * 75), 27.5+((num_key.index(int(num)-1)*75))
