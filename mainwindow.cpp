@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->plainTextEdit->hide();
     std::string engine;
     #ifdef _WIN32 || WIN64
-        std::string path = "./engines";
+        std::string path = ".\\engines";
     #else
         std::string path = "/usr/local/share/chess-mastermind/engines";
     #endif
@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
     }
     std::string game;
     #ifdef _WIN32 || WIN64
-        path = "./games";
+        path = ".\\games";
     #else
         path = "/usr/local/share/chess-mastermind/games";
     #endif
@@ -84,7 +84,7 @@ void MainWindow::on_Depth_returnPressed()
     ui->Depth->hide();
     std::string cmd;
     #ifdef _WIN32 || _WIN64
-        cmd = "analyzer/analyze.exe ";
+        cmd = ".\\analyzer\\analyze.exe ";
     #else
         cmd = "/usr/local/bin/analyze ";
     #endif
@@ -113,7 +113,7 @@ void MainWindow::on_AddGame_clicked()
 void MainWindow::on_lineEdit_returnPressed()
 {
     #ifdef _WIN32 || WIN64
-        std::string path = "./games";
+        std::string path = ".\\games";
     #else
         std::string path = "/usr/local/share/chess-mastermind/games";
     #endif
