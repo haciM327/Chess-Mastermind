@@ -9,6 +9,12 @@ main(int argc, char *argv[])
     int i;
 
     Py_Initialize();
+    PyObject* pathToAdd = PyUnicode_DecodeFSDefault("/usr/local/share/chess-mastermind/analyzer/");
+    PyObject* sysModule = PyImport_ImportModule("sys");
+    PyObject* sysPath = PyObject_GetAttrString(sysModule, "path");
+    PyList_Append(sysPath, pathToAdd);
+
+
     pName = PyUnicode_DecodeFSDefault("game_review");
     /* Error checking of pName left out */
 

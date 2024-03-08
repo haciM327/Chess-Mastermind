@@ -18,7 +18,10 @@ def get_game(e,d,g):
     game = None
 
     os = sys.platform
-    engine = chess.engine.SimpleEngine.popen_uci(e)
+    try:
+        engine = chess.engine.SimpleEngine.popen_uci(e)
+    except Exception as e:
+        print(f"Error: {e}")
     dep = d
     file = g
     try:
