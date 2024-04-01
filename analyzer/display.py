@@ -7,6 +7,7 @@ import pieces
 import chess
 import chess.pgn
 import sys
+import time
 
 # Defines the global list of pieces
 global piece_list
@@ -343,6 +344,7 @@ def main_loop(file, info_list):
         pygame.quit()
     except Exception as err:
         print(f"Error on line {sys.exc_info()[-1].tb_lineno}: {err}")
+        
 
 if __name__ == "__main__":
     main_loop("./games/example.pgn")

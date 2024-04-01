@@ -18,9 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->plainTextEdit->hide();
     std::string engine;
     #ifdef _WIN32 || WIN64
-        std::string path = ".\\engines";
+        std::string path = ".\\engines\\";
     #else
-        std::string path = "/usr/local/share/chess-mastermind/engines";
+        std::string path = "/usr/local/share/chess-mastermind/engines/";
     #endif
     for (const auto & entry : std::filesystem::recursive_directory_iterator(path)) {
         //std::cout << entry.path() << std::endl;
@@ -30,9 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     }
     std::string game;
     #ifdef _WIN32 || WIN64
-        path = ".\\games";
+        path = ".\\games\\";
     #else
-        path = "/usr/local/share/chess-mastermind/games";
+        path = "/usr/local/share/chess-mastermind/games/";
     #endif
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         game = entry.path().string();

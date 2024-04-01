@@ -80,7 +80,9 @@ def analyze(f):
         sys.stdout.write("\033[K")
         sys.stdout.write("\033[F")
         sys.stdout.write("\033[K")
-        print(f"{moves.index(move)/len(moves)*100:.2f}% complete!\nAbout {get_time(elapsed, moves, move)}until completed!")
+        print(f"{(1+moves.index(move))/len(moves)*100:.2f}% complete!")
+        print(f"About {get_time(elapsed, moves, move)}until completed!")
+
         times = []
         
     try:
@@ -173,5 +175,5 @@ def close():
     engine.quit()
     sys.exit()
 if __name__ == "__main__":
-    get_game("../engines/stockfish-windows-x86-64-sse41-popcnt.exe", 1, "../games/example.pgn")
+    get_game("../engines/stockfish.exe", 1, "../games/example.pgn")
 
