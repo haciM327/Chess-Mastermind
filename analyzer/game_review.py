@@ -94,6 +94,13 @@ def analyze(f):
 
 
 def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board):
+    values = {
+        chess.PAWN:1,
+        chess.KNIGHT:3,
+        chess.BISHOP:3,
+        chess.ROOK:5,
+        chess.QUEEN:9
+    }
     cureval = cureval.__str__()
     lasteval = lasteval.__str__()
     if "#" in cureval:
@@ -116,7 +123,14 @@ def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, bo
     if eval_change >= 0:
         if move == best_move:
             if len(board.attackers(opturn, move.to_square)) > len(board.attackers(turn, move.to_square)):
-                return "Brilliant Move!!"
+                piece_type = board.piece_type_at(move.to_square)
+                if not piece_type == chess.PAWN:
+                    board.pop()
+                    if board.is_capture(move):
+                        if values[piece_type] < values[board.piece_type_at(move.to_square)]:
+                            return "Brilliant Move!!"
+
+                    board.push(move)
             
             board.pop()
             board.push(best_move2)
@@ -175,5 +189,5 @@ def close():
     engine.quit()
     sys.exit()
 if __name__ == "__main__":
-    get_game("../engines/stockfish.exe", 1, "../games/example.pgn")
+    get_game("./engines/stockfish.exe", 1, "./games/example.pgn")
 
