@@ -20,7 +20,8 @@ find_package(PythonLibs COMPONENTS Development)
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows") # -Wl,-entry:wmainCRTStartup")
 
 # Add the executable
-add_executable(analyze game_review.c)
+add_executable(analyze game_review.c
+    display.py game_review.c game_review.py pieces.py)
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   target_compile_definitions(analyze PRIVATE SIZEOF_VOID_P=8 MS_WIN64)

@@ -31,8 +31,8 @@ add_subdirectory(analyzer)
     file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
     file(COPY ./analyzer/display.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
     file(COPY ./analyzer/pieces.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
-    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
-    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 #elseif(LINUX)
 #    file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/analyzer)
@@ -48,8 +48,8 @@ add_subdirectory(analyzer)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
+        #mainwindow.cpp
+        #mainwindow.h
         #mainwindow.ui
 )
 
@@ -60,7 +60,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     )
 qt_add_qml_module(Chess-Mastermind URI main QML_FILES qml/main.qml
     RESOURCES main.qrc
-    SOURCES qmlfuncs.h qmlfuncs.cpp)
+    SOURCES qmlfuncs.h qmlfuncs.cpp
+    RESOURCES todo)
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

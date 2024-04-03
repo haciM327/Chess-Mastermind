@@ -14,7 +14,7 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 void Qmlfuncs::addGame(QString pgn, QString name) {
 
 #ifdef _WIN32 || WIN64
-    std::string path = ".\\games\\";
+    std::string path = ".\\analyzer\\games\\";
 #else
     std::string path = "/usr/local/share/chess-mastermind/games/";
 #endif
@@ -70,24 +70,37 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
     cmd += depth;
     cmd += " ";
     cmd += game;
-    //MainWindow::hide();
-    std::system(cmd.toStdString().c_str());
-    //STARTUPINFO si;
-    //PROCESS_INFORMATION pi;
-    //const std::wstring wlpstrstd = cmd.toStdWString();
-    //const wchar_t* lpcwStr = wlpstrstd.c_str(); // No need for LPCWSTR
+    //std::system(cmd.toStdString().c_str());
+    STARTUPINFOA si;
+    PROCESS_INFORMATION pi;
 
-    //if (!CreateProcess(NULL, lpcwStr, NULL, NULL, false, 0, NULL, NULL, &si, &pi))
-    //{
-    //    printf("CreateProcess failed (%d).\n", GetLastError());
-    //    return;
-    //}
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+    char *command = new char[cmd.toStdString().size() + 1]; //= {'\0'};
+    strncpy(command, cmd.toStdString().c_str(), cmd.toStdString().size());
+    // Start the child process.
+    if( !CreateProcessA( NULL,   // No module name (use command line)
+                       command,        // Command line
+                       NULL,           // Process handle not inheritable
+                       NULL,           // Thread handle not inheritable
+                       FALSE,          // Set handle inheritance to FALSE
+                       CREATE_NO_WINDOW,              // No creation flags
+                       NULL,           // Use parent's environment block
+                       NULL,           // Use parent's starting directory
+                       &si,            // Pointer to STARTUPINFO structure
+                       &pi )           // Pointer to PROCESS_INFORMATION structure
+        )
+    {
+        printf( "CreateProcess failed (%d).\n", GetLastError() );
+        return;
+    }
 
     // Wait until child process exits.
-    //WaitForSingleObject( pi.hProcess, INFINITE );
+    WaitForSingleObject( pi.hProcess, INFINITE );
 
     // Close process and thread handles.
-    //CloseHandle( pi.hProcess );
-    //CloseHandle( pi.hThread );
+    CloseHandle( pi.hProcess );
+    CloseHandle( pi.hThread );
 }
 
