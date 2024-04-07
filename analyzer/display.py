@@ -37,23 +37,23 @@ def draw_board(move_type, square, cmove):
     
     key = ['8','7','6','5','4','3','2','1']
     if sys.platform == "win32":
-        img = pygame.image.load("./img/placeholder.png")
+        img = pygame.image.load("../img/placeholder.png")
         if move_type == "Mistake!":
-            img = pygame.image.load("./img/mistake.png")
+            img = pygame.image.load("../img/mistake.png")
         if move_type == "Inaccuracy!":
-            img = pygame.image.load("./img/innacuracy.png")
+            img = pygame.image.load("../img/innacuracy.png")
         if move_type == "Blunderous Move!":
-            img = pygame.image.load("./img/blunder.png")
+            img = pygame.image.load("../img/blunder.png")
         if move_type == "Good Move!":
-            img = pygame.image.load("./img/good.png")
+            img = pygame.image.load("../img/good.png")
         if move_type == "Excellent Move!":
-            img = pygame.image.load("./img/excellent.png")
+            img = pygame.image.load("../img/excellent.png")
         if move_type == "Best Move!":
-            img = pygame.image.load("./img/best.png")
+            img = pygame.image.load("../img/best.png")
         if move_type == "Great Move!":
-            img = pygame.image.load("./img/great.png")
+            img = pygame.image.load("../img/great.png")
         if move_type == "Brilliant Move!!":
-            img = pygame.image.load("./img/brilliant.png")
+            img = pygame.image.load("../img/brilliant.png")
     else:
         img = pygame.image.load("/usr/local/share/chess-mastermind/img/placeholder.png")
         if move_type == "Mistake!":
@@ -121,22 +121,22 @@ def setup_game(headers):
     key = ["A","B","C","D","E","F","G","H"]
     # Adds all the pieces to the piece list
     if sys.platform == "win32":
-        piece_list = [pieces.piece("r", ["A", "1"], (7.5, 27.5+(75*7)), "./img/white_rook.png"),
-                    pieces.piece("n", ["B", "1"], (7.5+(75*1),27.5+(75*7)), "./img/white_knight.png"),
-                    pieces.piece("b", ["C", "1"], (7.5+(75*2), 27.5+(75*7)), "./img/white_bishop.png"),
-                    pieces.piece("q", ["D", "1"], (7.5+(75*3), 27.5+(75*7)), "./img/white_queen.png"),
-                    pieces.piece("k", ["E", "1"], (7.5+(75*4), 27.5+(75*7)), "./img/white_king.png"),
-                    pieces.piece("b", ["F", "1"], (7.5+(75*5), 27.5+(75*7)), "./img/white_bishop.png"),
-                    pieces.piece("n", ["G", "1"], (7.5+(75*6), 27.5+(75*7)), "./img/white_knight.png"),
-                    pieces.piece("r", ["H", "1"], (7.5+(75*7), 27.5+(75*7)), "./img/white_rook.png"),
-                    pieces.piece("R", ["A", "8"], (7.5+(75*0), 27.5+(75*0)), "./img/black_rook.png"),
-                    pieces.piece("N", ["B", "8"], (7.5+(75*1), 27.5+(75*0)), "./img/black_knight.png"),
-                    pieces.piece("B", ["C", "8"], (7.5+(75*2), 27.5+(75*0)), "./img/black_bishop.png"),
-                    pieces.piece("Q", ["D", "8"], (7.5+(75*3), 27.5+(75*0)), "./img/black_queen.png"),
-                    pieces.piece("K", ["E", "8"], (7.5+(75*4), 27.5+(75*0)), "./img/black_king.png"),
-                    pieces.piece("B", ["F", "8"], (7.5+(75*5), 27.5+(75*0)), "./img/black_bishop.png"),
-                    pieces.piece("N", ["G", "8"], (7.5+(75*6), 27.5+(75*0)), "./img/black_knight.png"),
-                    pieces.piece("R", ["H", "8"], (7.5+(75*7), 27.5+(75*0)), "./img/black_rook.png")]
+        piece_list = [pieces.piece("r", ["A", "1"], (7.5, 27.5+(75*7)), "../img/white_rook.png"),
+                    pieces.piece("n", ["B", "1"], (7.5+(75*1),27.5+(75*7)), "../img/white_knight.png"),
+                    pieces.piece("b", ["C", "1"], (7.5+(75*2), 27.5+(75*7)), "../img/white_bishop.png"),
+                    pieces.piece("q", ["D", "1"], (7.5+(75*3), 27.5+(75*7)), "../img/white_queen.png"),
+                    pieces.piece("k", ["E", "1"], (7.5+(75*4), 27.5+(75*7)), "../img/white_king.png"),
+                    pieces.piece("b", ["F", "1"], (7.5+(75*5), 27.5+(75*7)), "../img/white_bishop.png"),
+                    pieces.piece("n", ["G", "1"], (7.5+(75*6), 27.5+(75*7)), "../img/white_knight.png"),
+                    pieces.piece("r", ["H", "1"], (7.5+(75*7), 27.5+(75*7)), "../img/white_rook.png"),
+                    pieces.piece("R", ["A", "8"], (7.5+(75*0), 27.5+(75*0)), "../img/black_rook.png"),
+                    pieces.piece("N", ["B", "8"], (7.5+(75*1), 27.5+(75*0)), "../img/black_knight.png"),
+                    pieces.piece("B", ["C", "8"], (7.5+(75*2), 27.5+(75*0)), "../img/black_bishop.png"),
+                    pieces.piece("Q", ["D", "8"], (7.5+(75*3), 27.5+(75*0)), "../img/black_queen.png"),
+                    pieces.piece("K", ["E", "8"], (7.5+(75*4), 27.5+(75*0)), "../img/black_king.png"),
+                    pieces.piece("B", ["F", "8"], (7.5+(75*5), 27.5+(75*0)), "../img/black_bishop.png"),
+                    pieces.piece("N", ["G", "8"], (7.5+(75*6), 27.5+(75*0)), "../img/black_knight.png"),
+                    pieces.piece("R", ["H", "8"], (7.5+(75*7), 27.5+(75*0)), "../img/black_rook.png")]
     else:
         piece_list = [pieces.piece("r", ["A", "1"], (7.5, 27.5+(75*7)), "/usr/local/share/chess-mastermind/img/white_rook.png"),
                     pieces.piece("n", ["B", "1"], (7.5+(75*1),27.5+(75*7)), "/usr/local/share/chess-mastermind/img/white_knight.png"),
@@ -158,10 +158,10 @@ def setup_game(headers):
     # Two loops for the all the pawns
     if sys.platform == "win32":
         for i in range(8):
-            piece_list.append(pieces.piece("p", [key[i], "2"], (7.5+(75*i), 27.5+(75*6)), "./img/white_pawn.png"))
+            piece_list.append(pieces.piece("p", [key[i], "2"], (7.5+(75*i), 27.5+(75*6)), "../img/white_pawn.png"))
         
         for i in range(8):
-            piece_list.append(pieces.piece("P", [key[i], "7"], (7.5+(75*i), 27.5+(75*1)), "./img/black_pawn.png"))
+            piece_list.append(pieces.piece("P", [key[i], "7"], (7.5+(75*i), 27.5+(75*1)), "../img/black_pawn.png"))
     else:
         for i in range(8):
             piece_list.append(pieces.piece("p", [key[i], "2"], (7.5+(75*i), 27.5+(75*6)), "/usr/local/share/chess-mastermind/img/white_pawn.png"))
@@ -347,4 +347,4 @@ def main_loop(file, info_list):
         
 
 if __name__ == "__main__":
-    main_loop("./games/example.pgn")
+    main_loop("../games/example.pgn")

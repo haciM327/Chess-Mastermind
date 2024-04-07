@@ -1,0 +1,1 @@
+pyinstaller --add-data "main.qml:." --onefile main.py

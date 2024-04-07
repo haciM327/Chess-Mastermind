@@ -1,9 +1,0 @@
-1. Modify the execution of the analyze program to give greater control over it
-
-2. Add MacOS support (arm support?)
-
-3. Create an appimage to help linux support
-
-4. Support other linux distros for installers
-
-5. Add features and niceties to the analyzer app

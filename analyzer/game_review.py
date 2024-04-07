@@ -85,12 +85,8 @@ def analyze(f):
 
         times = []
         
-    try:
-        display.main_loop(f, info_list)
-    except Exception as e:
-        print(e)
-        input()
-    close()
+
+    return f, info_list
 
 
 def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board):
@@ -189,5 +185,5 @@ def close():
     engine.quit()
     sys.exit()
 if __name__ == "__main__":
-    get_game("./engines/stockfish.exe", 1, "./games/example.pgn")
+    get_game("../engines/stockfish.exe", 1, "../games/example.pgn")
 

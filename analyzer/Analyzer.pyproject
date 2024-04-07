@@ -1,0 +1,8 @@
+{
+    "files": [
+        "main.py",
+        "main.qml",
+        "game_review.py",
+        "display.py"
+    ]
+}
