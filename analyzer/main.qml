@@ -1,23 +1,218 @@
-
-
-/*
-This is a UI file (.ui.qml) that is intended to be edited in Qt Design Studio only.
-It is supposed to be strictly declarative and only uses a subset of QML. If you edit
-this file manually, you might introduce QML code that is not supported by Qt Design Studio.
-Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on .ui.qml files.
-*/
 import QtQuick 6.6
 import QtQuick.Controls 6.6
 
-Window {
+ApplicationWindow {
     id: rectangle
     width: 1280
     height: 720
     color: "#000000"
     visible: true
     title: qsTr("Chess Mastermind")
+    property bool setup: bridge.load()
+    property string best_move: ""
+    property string cp: ""
+    property string move_type: ""
+    property string move: ''
+    function set_board(fen) {
+        rectangle.clear_board()
+        rectangle.set_icon(rectangle.move)
+        let i = 0
+        fen = fen.split(" ")[0]
+        let lines = fen.split("/")
+        let j = 0
+        for (j = 0; j<lines.length; j++) {
+            let str = lines[j].split('')
+            str = str.reverse()
+            lines[j] = str.join('')
+        }
+        fen = lines.reverse().join('')
+        let pos = 0
+        while (i < 64) {
+            let nums = ['1','2','3','4','5','6','7','8']
+            if (nums.includes(fen[i])) {
+                pos+=parseInt(fen[i])-1
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'R') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_rook.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'N') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_knight.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'B') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_bishop.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'P') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_pawn.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'K') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_king.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'Q') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/white_queen.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'r') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_rook.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'n') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_knight.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'b') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_bishop.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'p') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_pawn.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'k') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_king.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            if (fen[i] === 'q') {
+                eval("piece" + String(65-(pos + 1)) + ".visible = true")
+                eval("piece" + String(65-(pos + 1)) + ".source = '../img/black_queen.png'")
+                eval("piece" + String(65-(pos + 1)) + ".x = 6")
+                eval("piece" + String(65-(pos + 1)) + ".y = 6")
+                eval("piece" + String(65-(pos + 1)) + ".width = 60")
+                eval("piece" + String(65-(pos + 1)) + ".height = 60")
+                i++
+                pos++
+                continue
+            }
+            i++
+            pos++
+        }
+        cp.text = qsTr(rectangle.cp)
+        best_move.text = qsTr(rectangle.best_move)
+        move_type.text = qsTr(rectangle.move_type)
+    }
+    function clear_board() {
+        for (let i = 1; i<=64; i++) {
+            eval("piece" + String(i) + ".visible = false")
+        }
+    }
+    function set_icon(move) {
+        if (String(move) != '') {
+            let pos = [move.split('')[2], move.split('')[3]]
+            console.log(pos)
+            let keyx = {
+                'a': 390,
+                'b': 465,
+                'c': 540,
+                'd': 615,
+                'e': 690,
+                'f': 765,
+                'g': 840,
+                'h': 915
+            }
+            let keyy = {
+                '8': 55,
+                '7': 130,
+                '6': 205,
+                '5': 280,
+                '4': 355,
+                '3': 430,
+                '2': 505,
+                '1': 580
+            }
+            console.log(pos)
+            moveIcon.x = keyx[pos[0]]
+            moveIcon.y = keyy[pos[1]]
+        }
+    } 
+
+    
 
     Grid {
+        
         visible: false
         id: board
         x: 340
@@ -25,16 +220,18 @@ Window {
         width: 600
         height: 600
         opacity: 1
-        visible: true
         clip: true
         rows: 8
         columns: 8
+        property string fen: bridge.get_fen()
+        
         Rectangle {
             id: rectangle1
             width: 75
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            focus: true
             Text {
                 id: cor8
                 text: qsTr("8")
@@ -43,6 +240,33 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece1
+                source: "../img/white_rook.png"
+                visible: false
+            }
+            Keys.onPressed: (event) => {
+            if (event.key === Qt.Key_Left) {
+                let info = bridge.move_back()
+                console.log(info)
+                rectangle.best_move = info[0]
+                rectangle.cp = info[1]
+                rectangle.move_type = String(info[2])
+                board.fen = info[3]
+                rectangle.move = info[4]
+                rectangle.set_board(board.fen)
+                
+            } else if (event.key === Qt.Key_Right) {
+                let info = bridge.move_ahead()
+                rectangle.best_move = info[0]
+                rectangle.cp = info[1]
+                rectangle.move_type = String(info[2])
+                board.fen = info[3]
+                rectangle.move = info[4]
+                rectangle.set_board(board.fen)
+            }
+            // Add more key handling as needed
+        }
         }
 
         Rectangle {
@@ -51,6 +275,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece2
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -59,6 +288,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece3
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -67,6 +301,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece4
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -75,6 +314,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece5
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -83,6 +327,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece6
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -91,6 +340,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece7
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
         Rectangle {
             id: rectangle8
@@ -98,6 +352,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece8
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -114,6 +373,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece9
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -122,6 +386,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece10
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -130,6 +399,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece11
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -138,6 +412,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece12
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -146,6 +425,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece13
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -154,6 +438,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece14
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -162,6 +451,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece15
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -170,6 +464,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece16
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
         Rectangle {
             id: rectangle17
@@ -185,6 +484,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece17
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -193,6 +497,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece18
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -201,6 +510,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece19
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -209,6 +523,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece20
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -217,6 +536,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece21
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -225,6 +549,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece22
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -233,6 +562,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece23
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
         Rectangle {
             id: rectangle24
@@ -240,6 +574,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece24
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -256,6 +595,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece25
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -264,6 +608,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece26
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -272,6 +621,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece27
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -280,6 +634,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece28
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -288,6 +647,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece29
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -296,6 +660,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece30
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -304,6 +673,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece31
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -312,7 +686,13 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece32
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
+
         Rectangle {
             id: rectangle33
             width: 75
@@ -327,6 +707,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece33
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -335,6 +720,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece34
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -343,6 +733,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece35
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -351,6 +746,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece36
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -359,6 +759,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece37
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -367,6 +772,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece38
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -375,13 +785,24 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece39
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
+
         Rectangle {
             id: rectangle40
             width: 75
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece40
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -398,6 +819,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece41
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -406,6 +832,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece42
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -414,6 +845,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece43
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -422,6 +858,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece44
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -430,6 +871,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece45
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -438,6 +884,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece46
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -446,6 +897,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece47
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -454,7 +910,13 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece48
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
+
         Rectangle {
             id: rectangle49
             width: 75
@@ -469,6 +931,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece49
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -477,6 +944,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece50
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -485,6 +957,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece51
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -493,6 +970,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece52
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -501,6 +983,11 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece53
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -509,6 +996,11 @@ Window {
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece54
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -517,13 +1009,24 @@ Window {
             height: 75
             color: "#E9EDCC"
             border.width: 0
+            Image {
+                id: piece55
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
+
         Rectangle {
             id: rectangle56
             width: 75
             height: 75
             color: "#779954"
             border.width: 0
+            Image {
+                id: piece56
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -548,6 +1051,11 @@ Window {
                 x: 0
                 y: 0
             }
+            Image {
+                id: piece57
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -563,6 +1071,11 @@ Window {
                 font.bold: true
                 x: 60
                 y: 55
+            }
+            Image {
+                id: piece58
+                source: "../img/white_rook.png"
+                visible: false
             }
         }
 
@@ -580,6 +1093,11 @@ Window {
                 x: 60
                 y: 55
             }
+            Image {
+                id: piece59
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -595,6 +1113,11 @@ Window {
                 font.bold: true
                 x: 60
                 y: 55
+            }
+            Image {
+                id: piece60
+                source: "../img/white_rook.png"
+                visible: false
             }
         }
 
@@ -612,6 +1135,11 @@ Window {
                 x: 60
                 y: 55
             }
+            Image {
+                id: piece61
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -627,6 +1155,11 @@ Window {
                 font.bold: true
                 x: 60
                 y: 55
+            }
+            Image {
+                id: piece62
+                source: "../img/white_rook.png"
+                visible: false
             }
         }
 
@@ -644,6 +1177,11 @@ Window {
                 x: 60
                 y: 55
             }
+            Image {
+                id: piece63
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
 
         Rectangle {
@@ -660,11 +1198,75 @@ Window {
                 x: 60
                 y: 55
             }
+            Image {
+                id: piece64
+                source: "../img/white_rook.png"
+                visible: false
+            }
         }
     }
 
+    
+
+    Text {
+        id: cp
+        visible: false
+        text: ''
+        x: 950
+        y: 100
+        font.pointSize: 30
+        color: "#FFFFFF"
+
+    }
+    Text {
+        id: best_move
+        visible: false
+        text: ''
+        x: 950
+        y: 150
+        font.pointSize: 30
+        color: "#FFFFFF"
+    }
+    Text {
+        id: move_type
+        visible: false
+        text: ''
+        x: 950
+        y: 200
+        font.pointSize: 30
+        color: '#FFFFFF'
+    }
     Image {
-        id: whiteRook
-        source: "file"
+        id: moveIcon
+        visible: false
+        source: '../img/placeholder.png'
+        width: 30
+        height: 30
+    }
+
+    Button {
+        id: cont
+        visible: true
+        anchors.centerIn: parent
+        width: 200
+        height: 100
+        text: "Continue"
+        onClicked: {
+            if (rectangle.setup === true) {
+                cont.visible = false
+                board.visible = true
+                //whiteRook.visible = true
+                let i = 0
+                rectangle.set_board(bridge.get_fen())
+                rectangle1.focus = true
+                cp.visible = true
+                best_move.visible = true
+                move_type.visible = true
+                moveIcon.visible = true
+            } else {
+                bridge.error("An error has occured, this is likely due to the engine picked out.\nPlease ensure you pick an engine that works with your machine.\nIt may also be due to the depth or game selected.")
+                Qt.quit()
+            }
+        }
     }
 }

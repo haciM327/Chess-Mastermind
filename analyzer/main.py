@@ -1,18 +1,32 @@
-# This Python file uses the following encoding: utf-8
+# main.py
 import sys
-from pathlib import Path
-import game_review
-
+from PySide6.QtCore import QCoreApplication, QObject, Slot, QUrl
 from PySide6.QtGui import QGuiApplication
 from PySide6.QtQml import QQmlApplicationEngine
+import game_review
+import colorama
+from bridge import Bridge
+
+colorama.init()
+           
 
 
-if __name__ == "__main__":
-    f, info_list = game_review.get_game("C:\\Users\\Micah\\Documents\\GitHub\\Chess-Mastermind\\engines\\stockfish.exe", 1, "../games/example.pgn")
-    app = QGuiApplication(sys.argv)
+if __name__ == '__main__':
+    setup, game_stuff = game_review.get_game("./engines/stockfish-popcnt.exe", 12, "./games/test.pgn")
+    app = QGuiApplication()
     engine = QQmlApplicationEngine()
-    qml_file = Path(__file__).resolve().parent / "main.qml"
-    engine.load(qml_file)
+
+    # Create an instance of the Bridge class and expose it to QML
+    bridge = Bridge(setup, game_stuff)
+    engine.rootContext().setContextProperty("bridge", bridge)
+
+    # Get the path of the current directory and add the QML file name
+    qml_file = 'analyzer/main.qml'
+    engine.load(QUrl.fromLocalFile(qml_file))
+
     if not engine.rootObjects():
         sys.exit(-1)
+
+    
+
     sys.exit(app.exec())

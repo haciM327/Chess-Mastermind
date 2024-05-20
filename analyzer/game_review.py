@@ -20,26 +20,27 @@ def get_game(e,d,g):
     os = sys.platform
     try:
         engine = chess.engine.SimpleEngine.popen_uci(e)
-    except Exception as e:
-        print(f"Error: {e}")
+    except:
+        return False, False
     dep = d
     file = g
     try:
         f = open(file, "r")
     except:
-        print("ERROR: File could not be found!")
-        sys.exit()
+        return False, False
 
     try:
         game = chess.pgn.read_game(f)
     except:
-        print("ERROR: Could not read PGN!")
-        sys.exit()
+        return False, False
     
 
     f.close()
-    analyze(file)
-    return 0
+    try:
+        analyze_return = analyze(file)
+    except:
+        return False, False
+    return True, analyze_return
 def analyze(f):
     global game
     board = chess.Board()
@@ -55,6 +56,11 @@ def analyze(f):
     moves = []
     for i in mainline_moves:
         moves.append(i)
+    eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=2)
+    print(board.fen().__str__())
+    print(board.fen().__str__())
+    print(board.fen().__str__())
+    info_list.append(['', eval[0]["score"].pov(player).__str__(), "", board.fen().__str__()])
     for move in moves:
         times.append(time.time())
         eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=2)
@@ -64,13 +70,14 @@ def analyze(f):
         else:
             best_move2 = "forced"
         best_move = eval[0]["pv"][0]
-        move_info_list.append(best_move)
+        move_info_list.append(best_move.__str__())
         turn = board.turn
         board.push(move)
-        #print(board)
         cureval = eval[0]["score"].pov(player)
-        move_info_list.append(cureval)
+        move_info_list.append(cureval.__str__())
         move_info_list.append(get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board))
+        move_info_list.append(board.fen())
+        move_info_list.append(move.uci().__str__())
         lasteval = cureval
         info_list.append(move_info_list)
         move_info_list = []
@@ -82,7 +89,7 @@ def analyze(f):
         sys.stdout.write("\033[K")
         print(f"{(1+moves.index(move))/len(moves)*100:.2f}% complete!")
         print(f"About {get_time(elapsed, moves, move)}until completed!")
-
+        
         times = []
         
 
