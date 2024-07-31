@@ -2,8 +2,14 @@
 #include <QDebug>
 #include <fstream>
 #include <filesystem>
-#include <windows.h>
-#include <tchar.h>
+#ifdef _WIN32 || WIN64
+    #include <windows.h>
+    #include <tchar.h>
+#else
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/wait.h>
+#endif
 Qmlfuncs::Qmlfuncs(QObject *parent)
     : QObject{parent}
 {
@@ -16,7 +22,7 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 #ifdef _WIN32 || WIN64
     std::string path = ".\\analyzer\\games\\";
 #else
-    std::string path = "/usr/local/share/chess-mastermind/games/";
+    std::string path = "./games/";
 #endif
 
     path += name.toStdString().c_str();
@@ -33,7 +39,7 @@ QList<QString> Qmlfuncs::getGames() {
 #ifdef _WIN32 || WIN64
     path = ".\\games\\";
 #else
-    path = "/usr/local/share/chess-mastermind/games/";
+    path = "./games/";
 #endif
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
@@ -47,7 +53,7 @@ QList<QString> Qmlfuncs::getEngines() {
 #ifdef _WIN32 || WIN64
     path = ".\\engines\\";
 #else
-    path = "/usr/local/share/chess-mastermind/engines/";
+    path = "./engines/";
 #endif
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
@@ -56,15 +62,19 @@ QList<QString> Qmlfuncs::getEngines() {
     return return_value;
 }
 
+QString Qmlfuncs::getos() {
+    #ifdef _WIN32 || _WIN64
+        return "windows";
+    #else
+        return "other";
+    #endif
+}
+
 void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
     QString cmd;
 
 #ifdef _WIN32 || _WIN64
     cmd = ".\\analyzer\\analyze.exe ";
-#else
-    cmd = "/usr/local/bin/analyze ";
-#endif
-
     cmd += engine;
     cmd += " ";
     cmd += depth;
@@ -102,5 +112,37 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
     // Close process and thread handles.
     CloseHandle( pi.hProcess );
     CloseHandle( pi.hThread );
+#else
+
+    int pid = fork();
+    if (pid == 0) {
+        // Child process
+        char *eng = new char[engine.size() + 1];
+        strncpy(eng, engine.toStdString().c_str(), engine.size());
+        eng[engine.size()] = '\0';  // Ensure null termination
+        char *dep = new char[depth.size() + 1];
+        strncpy(dep, depth.toStdString().c_str(), depth.size());
+        dep[depth.size()] = '\0'; 
+        char *gam = new char[game.size() + 1];
+        strncpy(gam, game.toStdString().c_str(), game.size());
+        gam[game.size()] = '\0';
+
+        execl("./analyzer/analyze", "./analyzer/analyze", eng, dep, gam, nullptr);
+            
+        // If execl fails
+        perror("execl failed");
+        delete[] eng;
+        delete[] gam;
+        exit(EXIT_FAILURE);  
+    } else if (pid > 0) {
+        int status;
+        waitpid(pid, &status, 0);
+    } else {
+        printf("pid failed\n");
+    }
+    // Use a non-zero exit code to indicate failure
+#endif
+
+    
 }
 

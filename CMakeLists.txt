@@ -9,7 +9,7 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_PREFIX_PATH C:\\Qt\\6.6.2\\mingw_64)
+set(CMAKE_PREFIX_PATH ~/Qt/6.7.2/gcc_64)
 
 if (UNIX AND NOT APPLE)
     set(LINUX TRUE)
@@ -25,24 +25,10 @@ find_package(Qt6 REQUIRED COMPONENTS QuickControls2)
 qt_standard_project_setup(REQUIRES 6.6)
 
 add_subdirectory(analyzer)
-
-
-#if (WIN32)
-    file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
-    file(COPY ./analyzer/display.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
-    file(COPY ./analyzer/pieces.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
-    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-#elseif(LINUX)
-#    file(COPY ./analyzer/game_review.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/analyzer)
-#    file(COPY ./analyzer/display.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/analyzer)
-#    file(COPY ./analyzer/pieces.py DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/analyzer)
-#    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/)
-#    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/)
-#    file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/../share/chess-mastermind/)
-#endif()
-
+file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
 
 
 
@@ -61,7 +47,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 qt_add_qml_module(Chess-Mastermind URI main QML_FILES qml/main.qml
     RESOURCES main.qrc
     SOURCES qmlfuncs.h qmlfuncs.cpp
-    RESOURCES todo)
+    )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)

@@ -24,11 +24,10 @@ class Bridge(QObject):
     @Slot(result=list)
     def move_ahead(self):
         self.current_move += 1
-        if len(self.game_stuff[1]) < self.current_move:
+        if len(self.game_stuff[1]) == self.current_move:
             self.current_move -= 1
         self.fen = self.game_stuff[1][self.current_move][3]
         return self.game_stuff[1][self.current_move]
-
     @Slot(result=list)
     def move_back(self):
         self.current_move -= 1
@@ -36,3 +35,7 @@ class Bridge(QObject):
             self.current_move += 1
         self.fen = self.game_stuff[1][self.current_move][3]
         return self.game_stuff[1][self.current_move]
+    
+    @Slot(result=int)
+    def get_move_number(self):
+        return self.current_move

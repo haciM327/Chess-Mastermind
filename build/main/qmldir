@@ -1,0 +1,4 @@
+module main
+typeinfo Chess-Mastermind.qmltypes
+prefer :/qt/qml/main/
+

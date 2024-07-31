@@ -4,7 +4,7 @@ import chess.engine
 import sys
 import time
 
-import display
+#import display
 
 def get_game(e,d,g):
     global os
@@ -36,6 +36,7 @@ def get_game(e,d,g):
     
 
     f.close()
+    analyze(file)
     try:
         analyze_return = analyze(file)
     except:
@@ -44,7 +45,7 @@ def get_game(e,d,g):
 def analyze(f):
     global game
     board = chess.Board()
-    mainline_moves = game.mainline_moves()
+    mainline_moves = game.mainline_moves() # type: ignore
     move = 0
     player = chess.WHITE
     lasteval = 0
@@ -57,23 +58,19 @@ def analyze(f):
     for i in mainline_moves:
         moves.append(i)
     eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=2)
-    print(board.fen().__str__())
-    print(board.fen().__str__())
-    print(board.fen().__str__())
-    info_list.append(['', eval[0]["score"].pov(player).__str__(), "", board.fen().__str__()])
+    info_list.append(['', eval[0]["score"].pov(player).__str__(), "", board.fen().__str__()]) # type: ignore
     for move in moves:
         times.append(time.time())
         eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=2)
-        best_move = eval[0]["pv"][0]
+        best_move = eval[0]["pv"][0] # type: ignore # type: ignore
         if len(eval) > 1:
-            best_move2 = eval[1]["pv"][0]
+            best_move2 = eval[1]["pv"][0] # type: ignore
         else:
             best_move2 = "forced"
-        best_move = eval[0]["pv"][0]
         move_info_list.append(best_move.__str__())
         turn = board.turn
         board.push(move)
-        cureval = eval[0]["score"].pov(player)
+        cureval = eval[0]["score"].pov(player) # type: ignore # type: ignore
         move_info_list.append(cureval.__str__())
         move_info_list.append(get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board))
         move_info_list.append(board.fen())
@@ -83,10 +80,10 @@ def analyze(f):
         move_info_list = []
         times.append(time.time())
         elapsed.append(times[1]-times[0])
-        sys.stdout.write("\033[F")
-        sys.stdout.write("\033[K")
-        sys.stdout.write("\033[F")
-        sys.stdout.write("\033[K")
+        #sys.stdout.write("\033[F")
+        #sys.stdout.write("\033[K")
+        #sys.stdout.write("\033[F")
+        #sys.stdout.write("\033[K")
         print(f"{(1+moves.index(move))/len(moves)*100:.2f}% complete!")
         print(f"About {get_time(elapsed, moves, move)}until completed!")
         
@@ -97,6 +94,8 @@ def analyze(f):
 
 
 def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, board):
+    if best_move2 == 'forced':
+        return best_move2
     values = {
         chess.PAWN:1,
         chess.KNIGHT:3,
@@ -138,11 +137,11 @@ def get_move_type(turn, cureval, lasteval, move, best_move, best_move2, eval, bo
             board.pop()
             board.push(best_move2)
             eval = engine.analyse(board, chess.engine.Limit(depth=dep), multipv=1)
-            if "#" in eval[0]["score"].pov(chess.WHITE).__str__():
+            if "#" in eval[0]["score"].pov(chess.WHITE).__str__(): # type: ignore
                 x = 1000000
             else:
-                x = int(eval[0]["score"].pov(chess.WHITE).__str__())*2
-            if x-int(eval[0]["score"].pov(chess.WHITE).__str__().replace("#", "").replace("-", "")) < lasteval:
+                x = int(eval[0]["score"].pov(chess.WHITE).__str__())*2 # type: ignore
+            if x-int(eval[0]["score"].pov(chess.WHITE).__str__().replace("#", "").replace("-", "")) < lasteval: # type: ignore
                 board.pop()
                 board.push(best_move)
                 return "Great Move!"
