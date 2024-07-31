@@ -1,35 +1,28 @@
+cmake_minimum_required(VERSION 3.16)
+project(analyzer)
 
-cmake_minimum_required(VERSION 3.12)
-project(YourProjectName)
+# Print the source directory for debugging
 
-add_compile_definitions(UNICODE _UNICODE)
+# Set the path to your Python script
+set(PYTHON_SCRIPT_PATH "${CMAKE_SOURCE_DIR}/analyzer/main.py")
 
+# Set the output directory for the executable
+set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/analyzer")
 
+# Find Python3 interpreter
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
-# Add a define for UNICODE for use with wmain
+# Print the Python executable path for debugging
 
+# Add custom target to run PyInstaller
+add_custom_target(run_pyinstaller
+    COMMAND ${Python3_EXECUTABLE} -m PyInstaller --add-data ${CMAKE_SOURCE_DIR}"/analyzer/main.qml:." --onefile ${PYTHON_SCRIPT_PATH} --distpath ${OUTPUT_DIR} -n analyze
+    COMMENT "Running PyInstaller to build executable from Python script..."
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+)
 
-
-
-# Specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-
-find_package(PythonLibs COMPONENTS Development)
-
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-subsystem,windows") # -Wl,-entry:wmainCRTStartup")
-
-# Add the executable
-add_executable(analyze game_review.c)
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-  target_compile_definitions(analyze PRIVATE SIZEOF_VOID_P=8 MS_WIN64)
-endif()
-
-# Add the -municode option for MinGW
-if(MINGW)
-  target_compile_options(analyze PRIVATE -DMS_WIN64 -DSIZEOF_VOID_P=8)
-endif()
-
-target_include_directories(analyze PRIVATE ${PYTHON_INCLUDE_DIRS})
-target_link_libraries(analyze ${PYTHON_LIBRARIES})
+# Define a custom target that depends on `run_pyinstaller`
+add_custom_target(build ALL
+    DEPENDS run_pyinstaller
+    COMMENT "Building project and running PyInstaller..."
+)

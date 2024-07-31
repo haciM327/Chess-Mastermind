@@ -1,0 +1,5 @@
+--resource
+/home/micah/Chess-Mastermind/build/.qt/rcc/qmake_main.qrc
+--resource
+/home/micah/Chess-Mastermind/build/.qt/rcc/Chess-Mastermind_raw_qml_0.qrc
+/qt/qml/main/qml/main.qml

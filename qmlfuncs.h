@@ -17,6 +17,8 @@ public:
 
     Q_INVOKABLE QList<QString> getEngines();
 
+    Q_INVOKABLE QString getos();
+
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth);
 
 signals:

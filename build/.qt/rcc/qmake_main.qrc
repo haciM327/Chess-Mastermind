@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/qt/qml/main">
+    <file alias="qmldir">/home/micah/Chess-Mastermind/build/main/qmldir</file>
+  </qresource>
+</RCC>
+
