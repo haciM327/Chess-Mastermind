@@ -44,7 +44,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-qt_add_qml_module(Chess-Mastermind URI main QML_FILES qml/main.qml
+qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES qml/main.qml
     RESOURCES main.qrc
     SOURCES qmlfuncs.h qmlfuncs.cpp
     )
