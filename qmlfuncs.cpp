@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <fstream>
 #include <filesystem>
+#include <dirent.h>
 #ifdef _WIN32 || WIN64
     #include <windows.h>
     #include <tchar.h>
@@ -17,12 +18,34 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 }
 
 
-void Qmlfuncs::addGame(QString pgn, QString name) {
+ 
+bool Qmlfuncs::getport()
+{
+ 
+    DIR *pDir;
+    bool bExists = false;
+ 
+    pDir = opendir ("../share");
+ 
+    if (pDir != NULL)
+    {
+        bExists = true;
+        port = true;    
+        (void) closedir (pDir);
+    }
 
+    return bExists;
+}
+void Qmlfuncs::addGame(QString pgn, QString name) {
+std::string path;
 #ifdef _WIN32 || WIN64
     std::string path = ".\\analyzer\\games\\";
 #else
-    std::string path = "./games/";
+    if (port) {
+        std::string path = "../share/chess-mastermind/games";
+    } else {
+        std::string path = "/usr/local/share/chess-mastermind/games";
+    }
 #endif
 
     path += name.toStdString().c_str();
@@ -36,29 +59,53 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 
 QList<QString> Qmlfuncs::getGames() {
     QString path;
+    QList<QString> return_value;
 #ifdef _WIN32 || WIN64
     path = ".\\games\\";
-#else
-    path = "./games/";
-#endif
-    QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
     }
+#else
+    if (port) {
+        path = "../share/chess-mastermind/games";
+        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 32)));
+        }
+    } else {
+        path = "/usr/local/share/chess-mastermind/games";
+        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 42)));
+        }
+    }
+#endif
+    
+    
     return return_value;
 }
 
 QList<QString> Qmlfuncs::getEngines() {
     QString path;
+    QList<QString> return_value;
 #ifdef _WIN32 || WIN64
     path = ".\\engines\\";
-#else
-    path = "./engines/";
-#endif
-    QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));
     }
+#else
+    if (port) {
+        path = "../share/chess-mastermind/engines/";
+        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 34)));
+        }
+    } else {
+        path = "/usr/local/share/chess-mastermind/engines/";
+        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 44)));
+        }
+    }
+#endif
+    
+    
     return return_value;
 }
 
@@ -80,6 +127,7 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
     cmd += depth;
     cmd += " ";
     cmd += game;
+    cmd += " true";
     //std::system(cmd.toStdString().c_str());
     STARTUPINFOA si;
     PROCESS_INFORMATION pi;
@@ -126,9 +174,11 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
         char *gam = new char[game.size() + 1];
         strncpy(gam, game.toStdString().c_str(), game.size());
         gam[game.size()] = '\0';
-
-        execl("./analyzer/analyze", "./analyzer/analyze", eng, dep, gam, nullptr);
-            
+        if (port) {
+            execl("./analyze", "./analyze", eng, dep, gam, "true", nullptr);
+        } else {
+            execl("/usr/local/bin/analyze", "/usr/local/bin/analyze", eng, dep, gam, "false", nullptr);
+        }
         // If execl fails
         perror("execl failed");
         delete[] eng;

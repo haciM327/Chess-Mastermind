@@ -7,7 +7,7 @@ project(analyzer)
 set(PYTHON_SCRIPT_PATH "${CMAKE_SOURCE_DIR}/analyzer/main.py")
 
 # Set the output directory for the executable
-set(OUTPUT_DIR "${CMAKE_BINARY_DIR}/analyzer")
+set(OUTPUT_DIR "${CMAKE_BINARY_DIR}")
 
 # Find Python3 interpreter
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
@@ -16,7 +16,7 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # Add custom target to run PyInstaller
 add_custom_target(run_pyinstaller
-    COMMAND ${Python3_EXECUTABLE} -m PyInstaller --add-data ${CMAKE_SOURCE_DIR}"/analyzer/main.qml:." --onefile ${PYTHON_SCRIPT_PATH} --distpath ${OUTPUT_DIR} -n analyze
+    COMMAND ${Python3_EXECUTABLE} -m PyInstaller --add-data ${CMAKE_SOURCE_DIR}"/analyzer/main.qml:." --onefile ${PYTHON_SCRIPT_PATH} --distpath ${OUTPUT_DIR}/bin -n analyze
     COMMENT "Running PyInstaller to build executable from Python script..."
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

@@ -11,6 +11,8 @@ class Qmlfuncs : public QObject
 public:
     explicit Qmlfuncs(QObject *parent = nullptr);
 
+    Q_INVOKABLE bool getport();
+
     Q_INVOKABLE void addGame(QString pgn, QString name);
 
     Q_INVOKABLE QList<QString> getGames();
@@ -20,6 +22,8 @@ public:
     Q_INVOKABLE QString getos();
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth);
+
+    bool port;
 
 signals:
 };

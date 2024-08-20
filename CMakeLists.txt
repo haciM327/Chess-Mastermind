@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 
-project(Chess-Mastermind VERSION 0.3 LANGUAGES CXX)
+project(chess-mastermind VERSION 0.6 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -9,26 +9,34 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_PREFIX_PATH ~/Qt/6.7.2/gcc_64)
 
 if (UNIX AND NOT APPLE)
     set(LINUX TRUE)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 endif()
-if(NOT LINUX)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ./)
-else()
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ./bin)
-endif()
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick Gui)
 find_package(Qt6 REQUIRED COMPONENTS QuickControls2)
 qt_standard_project_setup(REQUIRES 6.6)
 
 add_subdirectory(analyzer)
-file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+if (LINUX)
+    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+    file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+    file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+else()
+    file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+    file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+endif()
+
+
 
 
 

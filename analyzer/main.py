@@ -16,10 +16,13 @@ if __name__ == '__main__':
     app = QGuiApplication()
     engine = QQmlApplicationEngine()
     # Create an instance of the Bridge class and expose it to QML
-    bridge = Bridge(setup, game_stuff)
+    bridge = Bridge(setup, game_stuff, sys.argv[4])
     engine.rootContext().setContextProperty("bridge", bridge)
     # Get the path of the current directory and add the QML file name
-    qml_file = 'analyzer/main.qml'
+    if sys.argv[4] == "true":
+        qml_file = '../share/chess-mastermind/main.qml'
+    else:
+        qml_file = "/usr/local/share/chess-mastermind/main.qml"
     engine.load(QUrl.fromLocalFile(qml_file))
     if not engine.rootObjects():
         print("Failed to load QML file.")

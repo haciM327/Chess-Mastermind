@@ -2,12 +2,13 @@ from PySide6.QtCore import QCoreApplication, QObject, Slot, QUrl
 import colorama
 class Bridge(QObject):
 
-    def __init__(self, setup, game_stuff, parent=None):
+    def __init__(self, setup, game_stuff, port, parent=None):
         super(Bridge, self).__init__(parent)
         self.setup = setup
         self.game_stuff = game_stuff
         self.current_move = 0
         self.fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+        self.port = port
 
     @Slot(result=bool)
     def load(self):
@@ -39,3 +40,10 @@ class Bridge(QObject):
     @Slot(result=int)
     def get_move_number(self):
         return self.current_move
+    
+    @Slot(result=bool)
+    def getport(self):
+        if self.port == 'true':
+            return True
+        else:
+            return False
