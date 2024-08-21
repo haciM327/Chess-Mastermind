@@ -28,12 +28,14 @@ if (LINUX)
     file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
     file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
     file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
-    file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+    file(COPY ./main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
+    file(COPY ./analyzer/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/share/chess-mastermind)
 else()
     file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-    file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+    file(COPY ./analyzer/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+    file(COPY ./main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()
 
 
@@ -52,8 +54,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES qml/main.qml
-    RESOURCES main.qrc
+qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES main.qml
     SOURCES qmlfuncs.h qmlfuncs.cpp
     )
 # Define target properties for Android with Qt 6 as:

@@ -16,7 +16,7 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 # Add custom target to run PyInstaller
 add_custom_target(run_pyinstaller
-    COMMAND ${Python3_EXECUTABLE} -m PyInstaller --add-data ${CMAKE_SOURCE_DIR}"/analyzer/main.qml:." --onefile ${PYTHON_SCRIPT_PATH} --distpath ${OUTPUT_DIR}/bin -n analyze
+    COMMAND ${Python3_EXECUTABLE} -m PyInstaller --add-data ${CMAKE_SOURCE_DIR}"/analyzer/analyzer.qml:." --onefile ${PYTHON_SCRIPT_PATH} --distpath ${OUTPUT_DIR}/bin -n analyze
     COMMENT "Running PyInstaller to build executable from Python script..."
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )

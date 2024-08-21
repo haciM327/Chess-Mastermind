@@ -20,9 +20,9 @@ if __name__ == '__main__':
     engine.rootContext().setContextProperty("bridge", bridge)
     # Get the path of the current directory and add the QML file name
     if sys.argv[4] == "true":
-        qml_file = '../share/chess-mastermind/main.qml'
+        qml_file = '../share/chess-mastermind/analyzer.qml'
     else:
-        qml_file = "/usr/local/share/chess-mastermind/main.qml"
+        qml_file = "/usr/local/share/chess-mastermind/analyzer.qml"
     engine.load(QUrl.fromLocalFile(qml_file))
     if not engine.rootObjects():
         print("Failed to load QML file.")

@@ -251,7 +251,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece1
-                source: rectangle.imagepath + "white_rook.png"
+                source: rectangle.imagepath + "img/white_rook.png"
                 visible: false
             }
             Keys.onPressed: (event) => {
@@ -297,7 +297,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece2
-                source: rectangle.imagepath + "white_rook.png"
+                source: rectangle.imagepath + "img/white_rook.png"
                 visible: false
             }
         }
@@ -310,7 +310,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece3
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -323,7 +323,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece4
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -336,7 +336,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece5
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -349,7 +349,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece6
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -362,7 +362,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece7
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -374,7 +374,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece8
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -395,7 +395,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece9
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -408,7 +408,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece10
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -421,7 +421,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece11
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -434,7 +434,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece12
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -447,7 +447,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece13
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -460,7 +460,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece14
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -473,7 +473,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece15
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -486,7 +486,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece16
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -506,7 +506,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece17
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -519,7 +519,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece18
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -532,7 +532,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece19
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -545,7 +545,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece20
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -558,7 +558,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece21
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -571,7 +571,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece22
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -584,7 +584,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece23
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -596,7 +596,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece24
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -617,7 +617,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece25
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -630,7 +630,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece26
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -643,7 +643,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece27
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -656,7 +656,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece28
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -669,7 +669,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece29
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -682,7 +682,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece30
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -695,7 +695,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece31
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -708,7 +708,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece32
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -729,7 +729,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece33
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -742,7 +742,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece34
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -755,7 +755,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece35
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -768,7 +768,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece36
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -781,7 +781,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece37
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -794,7 +794,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece38
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -807,7 +807,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece39
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -820,7 +820,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece40
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -841,7 +841,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece41
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -854,7 +854,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece42
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -867,7 +867,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece43
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -880,7 +880,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece44
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -893,7 +893,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece45
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -906,7 +906,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece46
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -919,7 +919,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece47
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -932,7 +932,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece48
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -953,7 +953,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece49
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -966,7 +966,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece50
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -979,7 +979,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece51
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -992,7 +992,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece52
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1005,7 +1005,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece53
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1018,7 +1018,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece54
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1031,7 +1031,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece55
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1044,7 +1044,7 @@ ApplicationWindow {
             border.width: 0
             Image {
                 id: piece56
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1073,7 +1073,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece57
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1094,7 +1094,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece58
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1115,7 +1115,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece59
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1136,7 +1136,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece60
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1157,7 +1157,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece61
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1178,7 +1178,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece62
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1199,7 +1199,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece63
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1220,7 +1220,7 @@ ApplicationWindow {
             }
             Image {
                 id: piece64
-                source: rectangle.imagepath  + "white_rook.png"
+                source: rectangle.imagepath  + "img/white_rook.png"
                 visible: false
             }
         }
@@ -1259,7 +1259,7 @@ ApplicationWindow {
     Image {
         id: moveIcon
         visible: false
-        source: rectangle.imagepath + "placeholder.png"
+        source: rectangle.imagepath + "img/placeholder.png"
         width: 30
         height: 30
     }
