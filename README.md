@@ -6,7 +6,7 @@ Chess Mastermind is a project that is designed to help chess players get better 
 
 An amd64/x64 Linux or Windows operating system and python3 with chess pyside6 and colorama installed
 # Installation
-Installer files are available for Windows and Linux. Double-click to install. On Linux you will need to add /usr/local/bin/chess-mastermind to the path (fix coming). For Macos or other operating systems, you will need to build from source. Keep in mind these operating systems are not officially supported and may not work as intended.
+Installer files are available for Windows and Linux. Double-click to install. Macos is not offically supported yet but you can try building from source. (No gurantees)
 
 # Compilation
 
@@ -18,18 +18,18 @@ To compile from source you will need some packages like cmake, qt6, qt6-widgets,
 
 ### Debian or Ubuntu based Linux
 
-To install the prerequisites you will need to have root access and follow the steps below:
+Due to oddities with apt and how it installs qt packages: qt must be installed via the online installer. I am working on a way to make apt work but for now follow the steps below.
 
+Install prerequisites
 ```
-sudo apt-get update && sudo apt-get upgrade
-sudo apt-get install build-essential cmake qt6-base-dev qt6-declarative-dev libgl1-mesa-dev git
+sudo apt-get install git cmake build-essential libgl1-mesa-dev git
 ```
-
-On some systems global installations of python will not allow you to install pip packages, you can either overide this or install your own. Please read compiling python for more information.
-
-To install the required packages use:
-```python3 -m pip install chess pyside6 pyinstaller colorama```
-(Replace python3 with your installation)
+Install the following packages from the qt online installer: from 6.7.2: Desktop and Sources <br />
+If you're okay with breaking system packages then run the following with ```--break-system-packages```. If not then compile python from source and then run the command
+```
+python3 -m pip install pyinstaller colorama pyside6 chess
+```
+You're now all set to compile!
 
 ### Fedora or Red Hat based Linux
 
