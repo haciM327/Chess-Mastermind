@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
         if (bExists) {
             engine.load(QUrl(QStringLiteral("../share/chess-mastermind/main.qml")));
         } else {
-            engine.load(QUrl(QStringLiteral("/usr/local/main.qml")));
+            engine.load(QUrl(QStringLiteral("/usr/local/share/chess-mastermind/main.qml")));
         }
     #endif
     if (engine.rootObjects().isEmpty())

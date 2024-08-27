@@ -3,6 +3,7 @@
 #include <fstream>
 #include <filesystem>
 #include <dirent.h>
+#include <iostream>
 #ifdef _WIN32 || WIN64
     #include <windows.h>
     #include <tchar.h>
@@ -41,7 +42,8 @@ std::string path;
 #ifdef _WIN32 || WIN64
     std::string path = ".\\analyzer\\games\\";
 #else
-    if (port) {
+    
+    if (getport()) {
         std::string path = "../share/chess-mastermind/games";
     } else {
         std::string path = "/usr/local/share/chess-mastermind/games";
@@ -66,7 +68,7 @@ QList<QString> Qmlfuncs::getGames() {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
     }
 #else
-    if (port) {
+    if (getport()) {
         path = "../share/chess-mastermind/games";
         for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
             return_value.append(QString::fromStdString(entry.path().string().erase(0, 32)));
@@ -74,7 +76,7 @@ QList<QString> Qmlfuncs::getGames() {
     } else {
         path = "/usr/local/share/chess-mastermind/games";
         for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 42)));
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 40)));
         }
     }
 #endif
@@ -92,7 +94,7 @@ QList<QString> Qmlfuncs::getEngines() {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));
     }
 #else
-    if (port) {
+    if (getport()) {
         path = "../share/chess-mastermind/engines/";
         for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
             return_value.append(QString::fromStdString(entry.path().string().erase(0, 34)));
@@ -100,7 +102,7 @@ QList<QString> Qmlfuncs::getEngines() {
     } else {
         path = "/usr/local/share/chess-mastermind/engines/";
         for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 44)));
+            return_value.append(QString::fromStdString(entry.path().string().erase(0, 42)));
         }
     }
 #endif
@@ -174,9 +176,10 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
         char *gam = new char[game.size() + 1];
         strncpy(gam, game.toStdString().c_str(), game.size());
         gam[game.size()] = '\0';
-        if (port) {
+        if (getport()) {
             execl("./analyze", "./analyze", eng, dep, gam, "true", nullptr);
         } else {
+            std::cout << eng << dep << gam << "\n";
             execl("/usr/local/bin/analyze", "/usr/local/bin/analyze", eng, dep, gam, "false", nullptr);
         }
         // If execl fails

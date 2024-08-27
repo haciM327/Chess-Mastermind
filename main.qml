@@ -8,6 +8,7 @@ Window {
     width: 1280
     height: 720
     color: "#000000"
+    property bool port: funcs.getport()
     property alias textAreaColor: pgnInput.color
     visible: true
 
@@ -298,7 +299,7 @@ Window {
             if (funcs.getos() == 'windows') {
                 funcs.runAnalyzer(".\\games\\" + gamelist.currentValue, ".\\engines\\" + enginelist.currentValue, depth.text)
             } else {
-                if (funcs.getport) {
+                if (rectangle.port) {
                     funcs.runAnalyzer("../share/chess-mastermind/games/" + gamelist.currentValue, "../share/chess-mastermind/engines/" + enginelist.currentValue, depth.text)
                 } else {
                     funcs.runAnalyzer("/usr/local/share/chess-mastermind/games/" + gamelist.currentValue, "/usr/local/share/chess-mastermind/engines/" + enginelist.currentValue, depth.text)
