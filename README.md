@@ -6,7 +6,24 @@ Chess Mastermind is a project that is designed to help chess players get better 
 
 An amd64/x64 Linux or Windows operating system and python3 with chess pyside6 and colorama installed
 # Installation
-Installer files are available for Windows and Linux. Double-click to install. Macos is not offically supported yet but you can try building from source. (No gurantees)
+Installer files are available for Windows and Linux. Macos is not offically supported yet but you can try building from source. (No gurantees)
+## Debian or Ubuntu based linux
+After downloading, run:
+```
+cd Downloads
+sudo dpkg -i chess_mastermind-0.6.0.x86_64.deb
+sudo apt install -f
+```
+
+## Red Hat based linux
+After downloading, run:
+```
+cd Downloads
+sudo dnf install chess_mastermind-0.6.0.x86_64.rpm
+```
+
+## Windows
+Just double click the installer
 
 # Compilation
 
@@ -18,17 +35,15 @@ To compile from source you will need some packages like cmake, qt6, qt6-widgets,
 
 ### Debian or Ubuntu based Linux
 
-Due to oddities with apt and how it installs qt packages: qt must be installed via the online installer. I am working on a way to make apt work but for now follow the steps below.
-
 Install prerequisites
 ```
-sudo apt-get install git cmake build-essential libgl1-mesa-dev git
+sudo apt-get install git cmake build-essential libgl1-mesa-dev git qt6-base-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates python3-pip
 ```
-Install the following packages from the qt online installer: from 6.7.2: Desktop and Sources <br />
 If you're okay with breaking system packages then run the following with ```--break-system-packages```. If not then compile python from source and then run the command
 ```
 python3 -m pip install pyinstaller colorama pyside6 chess
 ```
+(Replace python3 with your python installation)
 You're now all set to compile!
 
 ### Fedora or Red Hat based Linux
@@ -71,4 +86,4 @@ Install you favorite c/c++ compiler. Install cmake and python from [cmake.org](c
 
    ```make -j${nproc}```
 
-6. All done! you have now build the project and can run it whenever. You can install it to any directory you want.
+6. All done! you have now build the project and can run it whenever. Installation from source coming soon
