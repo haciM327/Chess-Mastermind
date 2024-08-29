@@ -51,7 +51,7 @@ You're now all set to compile!
 To install the prerequisites you will need to have root access and follow the steps below:
 ```
 sudo dnf update
-sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt-declarative-devel
+sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel
 ```
 
 On some systems global installations of python will not allow you to install pip packages, you can either overide this or install your own. Please read compiling python for more information.
@@ -61,8 +61,7 @@ To install the required packages use:
 (Replace python3 with your installation)
 
 ### Windows
-
-Install you favorite c/c++ compiler. Install cmake and python from [cmake.org](cmake.org) and [python.org](python.org) respectively. Install git. Open up powershell and follow the compilation steps below
+Download and install mingw (mark gcc-gcc and gcc-g++). Add mingw/bin to path. Download and Install the latest version of qt and qt creator from the qt online installer. Add qt binary path to path. Install python and pip. Run ```python3 -m pip install chess pyside6 pyinstaller colorama```. Download and install git. Run ```git clone https://github.com/haciM327/Chess-Mastermind.git```. Open the folder in Qt Creator and compile for release. Run ```windeployqt6 Chess-Mastermind.exe``` in the build folder. Run it whenever.
 
 ## Compiling
 
