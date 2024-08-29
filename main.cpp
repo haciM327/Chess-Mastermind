@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Basic");
     QQmlApplicationEngine engine;
     #ifdef _WIN32 || WIN64
-        engine.load(QUrl(QStringLiteral("../share/chess-mastermind/main.qml")));
+        engine.load(QUrl(QStringLiteral("main.qml")));
     #else
         DIR *pDir;
         bool bExists = false;

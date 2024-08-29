@@ -40,7 +40,7 @@ bool Qmlfuncs::getport()
 void Qmlfuncs::addGame(QString pgn, QString name) {
 std::string path;
 #ifdef _WIN32 || WIN64
-    std::string path = ".\\analyzer\\games\\";
+    path = ".\\analyzer\\games\\";
 #else
     
     if (getport()) {
