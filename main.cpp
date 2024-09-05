@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");
     QQmlApplicationEngine engine;
-    #ifdef _WIN32 || WIN64
+    #ifdef _WIN32
         engine.load(QUrl(QStringLiteral("main.qml")));
     #else
         DIR *pDir;

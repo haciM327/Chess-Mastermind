@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <dirent.h>
 #include <iostream>
-#ifdef _WIN32 || WIN64
+#ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
 #else
@@ -39,14 +39,14 @@ bool Qmlfuncs::getport()
 }
 void Qmlfuncs::addGame(QString pgn, QString name) {
 std::string path;
-#ifdef _WIN32 || WIN64
+#ifdef _WIN32
     path = ".\\analyzer\\games\\";
 #else
     
     if (getport()) {
-        std::string path = "../share/chess-mastermind/games";
+        path = "../share/chess-mastermind/games/";
     } else {
-        std::string path = "/usr/local/share/chess-mastermind/games";
+        path = "/usr/local/share/chess-mastermind/games/";
     }
 #endif
 
@@ -62,7 +62,7 @@ std::string path;
 QList<QString> Qmlfuncs::getGames() {
     QString path;
     QList<QString> return_value;
-#ifdef _WIN32 || WIN64
+#ifdef _WIN32
     path = ".\\games\\";
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
@@ -88,7 +88,7 @@ QList<QString> Qmlfuncs::getGames() {
 QList<QString> Qmlfuncs::getEngines() {
     QString path;
     QList<QString> return_value;
-#ifdef _WIN32 || WIN64
+#ifdef _WIN32
     path = ".\\engines\\";
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));
@@ -112,7 +112,7 @@ QList<QString> Qmlfuncs::getEngines() {
 }
 
 QString Qmlfuncs::getos() {
-    #ifdef _WIN32 || _WIN64
+    #ifdef _WIN32
         return "windows";
     #else
         return "other";
@@ -122,7 +122,7 @@ QString Qmlfuncs::getos() {
 void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
     QString cmd;
 
-#ifdef _WIN32 || _WIN64
+#ifdef _WIN32
     cmd = ".\\analyzer\\analyze.exe ";
     cmd += engine;
     cmd += " ";

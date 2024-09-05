@@ -157,8 +157,15 @@ Window {
             radius: 6
         }
 
-        onClicked:
+        onClicked: {
             funcs.addGame(pgnInput.text, textArea.text)
+            analyze.visible = true
+            addGame.visible = true
+            label.text = "Welcome to Chess Mastermind"
+            pgnInput.visible = false
+            textArea.visible = false
+            add.visible = false
+        }
     }
 
     ComboBox {
