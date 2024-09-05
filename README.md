@@ -37,7 +37,7 @@ To compile from source you will need some packages like cmake, qt6, qt6-widgets,
 
 Install prerequisites
 ```
-sudo apt-get install git cmake build-essential libgl1-mesa-dev git qt6-base-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates python3-pip
+sudo apt-get install git cmake build-essential qt6-base-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates python3-pip
 ```
 If you're okay with breaking system packages then run the following with ```--break-system-packages```. If not then compile python from source and then run the command
 ```
@@ -85,4 +85,4 @@ Download and install mingw (mark gcc-gcc and gcc-g++). Add mingw/bin to path. Do
 
    ```make -j${nproc}```
 
-6. All done! you have now build the project and can run it whenever. Installation from source coming soon
+6. All done! you have now build the project and can run it whenever.
