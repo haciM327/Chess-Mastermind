@@ -14,11 +14,6 @@ ApplicationWindow {
     property string move_type: ""
     property string move: ''
     property string imagepath: ''
-    onClosing: {
-        Qt.quit()
-
-        // Additional cleanup code here if needed
-    }
     function set_board(fen) {
         rectangle.clear_board()
         rectangle.set_icon(rectangle.move)
@@ -213,15 +208,32 @@ ApplicationWindow {
                 '2': 505,
                 '1': 580
             }
+
             moveIcon.x = keyx[pos[0]]
             moveIcon.y = keyy[pos[1]]
         }
-    } 
+    }
 
-    
+    Text {
+        visible: false
+        id: white_player
+        x: 340
+        y: 665
+        color: 'white'
+        text: qsTr('placeholder')
+    }
+
+    Text {
+        visible: false
+        id: black_player
+        x: 340
+        y: 30
+        color: 'white'
+        text: qsTr('placeholder')
+    }
 
     Grid {
-        
+
         visible: false
         id: board
         x: 340
@@ -233,7 +245,7 @@ ApplicationWindow {
         rows: 8
         columns: 8
         property string fen: bridge.get_fen()
-        
+
         Rectangle {
             id: rectangle1
             width: 75
@@ -255,38 +267,38 @@ ApplicationWindow {
                 visible: false
             }
             Keys.onPressed: (event) => {
-            if (event.key === Qt.Key_Left) {
-                let info = bridge.move_back()
-                rectangle.best_move = info[0]
-                rectangle.cp = info[1]
-                rectangle.move_type = String(info[2])
-                board.fen = info[3]
-                if (bridge.get_move_number() != 0) { 
+                if (event.key === Qt.Key_Left) {
+                    let info = bridge.move_back()
+                    rectangle.best_move = info[0]
+                    rectangle.cp = info[1]
+                    rectangle.move_type = String(info[2])
+                    board.fen = info[3]
+                    if (bridge.get_move_number() != 0) {
+                        rectangle.move = info[4]
+                    }
+                    else {
+                        rectangle.move_type = ""
+                        rectangle.move = ""
+                        moveIcon.visible = false
+                    }
+                    rectangle.set_board(board.fen)
+                    moveIcon.source = rectangle.imagepath + 'img/' + String(info[2]) + '.png'
+
+                } else if (event.key === Qt.Key_Right) {
+                    let info = bridge.move_ahead()
+                    rectangle.best_move = info[0]
+                    rectangle.cp = info[1]
+                    rectangle.move_type = String(info[2])
+                    board.fen = info[3]
                     rectangle.move = info[4]
+                    rectangle.set_board(board.fen)
+                    moveIcon.source = rectangle.imagepath + 'img/' + String(info[2]) + '.png'
+                    if (bridge.get_move_number() != 0) {
+                        moveIcon.visible = true
+                    }
                 }
-                else {
-                    rectangle.move_type = ""
-                    rectangle.move = ""
-                    moveIcon.visible = false
-                }
-                rectangle.set_board(board.fen)
-                moveIcon.source = rectangle.imagepath + 'img/' + String(info[2]) + '.png'
-                
-            } else if (event.key === Qt.Key_Right) {
-                let info = bridge.move_ahead()
-                rectangle.best_move = info[0]
-                rectangle.cp = info[1]
-                rectangle.move_type = String(info[2])
-                board.fen = info[3]
-                rectangle.move = info[4]
-                rectangle.set_board(board.fen)
-                moveIcon.source = rectangle.imagepath + 'img/' + String(info[2]) + '.png'
-                if (bridge.get_move_number() != 0) {
-                    moveIcon.visible = true
-                }
+                // Add more key handling as needed
             }
-            // Add more key handling as needed
-        }
         }
 
         Rectangle {
@@ -1226,7 +1238,7 @@ ApplicationWindow {
         }
     }
 
-    
+
 
     Text {
         id: cp
@@ -1282,11 +1294,15 @@ ApplicationWindow {
                 cp.visible = true
                 best_move.visible = true
                 move_type.visible = true
+                white_player.text = bridge.getheads()['White']
+                white_player.visible = true
+                black_player.text = bridge.getheads()['Black']
+                black_player.visible = true
                 //moveIcon.visible = true
-            } else {
-                bridge.error("An error has occured, this is likely due to the engine picked out.\nPlease ensure you pick an engine that works with your machine.\nIt may also be due to the depth or game selected.")
-                Qt.quit()
-            }
+            } //else {
+            //bridge.error("An error has occured, this is likely due to the engine picked out.\nPlease ensure you pick an engine that works with your machine.\nIt may also be due to the depth or game selected.")
+            //Qt.quit()
+            //}
         }
     }
 }
