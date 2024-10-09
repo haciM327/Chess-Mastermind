@@ -2,6 +2,10 @@
 
 Chess Mastermind is a project that is designed to help chess players get better at the game. Chess Mastermind does this by you inputting a chess game and it will tell you what you did right and what you did wrong. It can tell you what you should've done instead and how you can improve. It is a similar program to chess.com's game review however this program is entirely free and open-source, it can use any engine you want, and will eventually (although not yet) be able to give you in-depth help with chess strategies and tactics.
 
+# Known Issues
+
+When running with wayland you may get an error akin to this: ```qt.qpa.wayland: eglSwapBuffers failed with 0x300d, surface: 0x1919c130```
+Unfortunately there is nothing I can do about this, a quick fix would be to run ```export QT_QPA_PLATFORM=xcb``` to run the app with X11 rather than wayland. Alternatively you can simply login with an X11 session if possible.
 # Requirements
 
 An amd64/x64 Linux or Windows operating system and python3 with chess pyside6 and colorama installed
