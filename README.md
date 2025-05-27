@@ -2,15 +2,11 @@
 
 Chess Mastermind is a project that is designed to help chess players get better at the game. Chess Mastermind does this by you inputting a chess game and it will tell you what you did right and what you did wrong. It can tell you what you should've done instead and how you can improve. It is a similar program to chess.com's game review however this program is entirely free and open-source, it can use any engine you want, and will eventually (although not yet) be able to give you in-depth help with chess strategies and tactics.
 
-# Known Issues
-
-When running with wayland you may get an error akin to this: ```qt.qpa.wayland: eglSwapBuffers failed with 0x300d, surface: 0x1919c130```
-Unfortunately there is nothing I can do about this, a quick fix would be to run ```export QT_QPA_PLATFORM=xcb``` to run the app with X11 rather than wayland. Alternatively you can simply login with an X11 session if possible.
 # Requirements
 
-An amd64/x64 Linux or Windows operating system and python3 with chess pyside6 and colorama installed
+An amd64/x64 Linux or Windows operating system.
 # Installation
-Installer files are available for Windows and Linux. Macos is not offically supported yet but you can try building from source. (No gurantees)
+Installer files are available for Windows and Linux. Macos is not offically supported yet but you can try building from source.
 ## Debian or Ubuntu based linux
 After downloading, run:
 ```
@@ -27,56 +23,39 @@ sudo dnf install chess_mastermind-0.6.0.x86_64.rpm
 ```
 
 ## Windows
-Just double click the installer
+Just double click the installer and follow steps to install. Then run as an administrator.
 
 # Compilation
 
-If you intend on compiling from source, please use the source code that comes with the release do not clone the repository as the current code has a high liklihood of not building correctly
-
 ## Prerequisites
 
-To compile from source you will need some packages like cmake, qt6, qt6-widgets, a c/c++ compiler, python3, and git. Python also has to have a few packages installed. 
+To compile from source you will need some packages like cmake, qt6, qt6-widgets, a c/c++ compiler.
 
 ### Debian or Ubuntu based Linux
 
 Install prerequisites
 ```
-sudo apt-get install git cmake build-essential qt6-base-dev qml6-module-qtquick-controls qml6-module-qtqml-workerscript qml6-module-qtquick-window qml6-module-qtquick-templates python3-pip
+sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev
 ```
-If you're okay with breaking system packages then run the following with ```--break-system-packages```. If not then compile python from source and then run the command
-```
-python3 -m pip install pyinstaller colorama pyside6 chess
-```
-(Replace python3 with your python installation)
-You're now all set to compile!
 
 ### Fedora or Red Hat based Linux
 
 To install the prerequisites you will need to have root access and follow the steps below:
 ```
 sudo dnf update
-sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel
+sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel git
 ```
-
-On some systems global installations of python will not allow you to install pip packages, you can either overide this or install your own. Please read compiling python for more information.
-
-To install the required packages use:
-```python3 -m pip install chess pyside6 pyinstaller colorama```
-(Replace python3 with your installation)
-
-### Windows
-Download and install mingw (mark gcc-gcc and gcc-g++). Add mingw/bin to path. Download and Install the latest version of qt and qt creator from the qt online installer. Add qt binary path to path. Install python and pip. Run ```python3 -m pip install chess pyside6 pyinstaller colorama```. Download and install git. Run ```git clone https://github.com/haciM327/Chess-Mastermind.git```. Open the folder in Qt Creator and compile for release. Run ```windeployqt6 Chess-Mastermind.exe``` in the build folder. Run it whenever.
 
 ## Compiling
 
 1. Clone the repository with:
 
    ```git clone https://github.com/haciM327/Chess-Mastermind.git```
-   
+
 2. Move into the repository with:
 
    ```cd Chess-Mastermind```
-   
+
 3. Make a build directory and move into it
 
    ```mkdir build && cd build```

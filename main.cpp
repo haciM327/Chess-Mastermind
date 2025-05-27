@@ -1,32 +1,20 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQuickStyle>
+#include <QQmlContext>
 #include <dirent.h>
+#include <QObject>
+#include "analyzer/analyzer.hpp"
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");
     QQmlApplicationEngine engine;
-    #ifdef _WIN32
-        engine.load(QUrl(QStringLiteral("main.qml")));
-    #else
-        DIR *pDir;
-        bool bExists = false;
-    
-        pDir = opendir ("../share");
-    
-        if (pDir != NULL)
-        {
-            bExists = true;
-            (void) closedir (pDir);
-        }
 
-        if (bExists) {
-            engine.load(QUrl(QStringLiteral("../share/chess-mastermind/main.qml")));
-        } else {
-            engine.load(QUrl(QStringLiteral("/usr/local/share/chess-mastermind/main.qml")));
-        }
-    #endif
+    qRegisterMetaType<game_data>("game_data");
+    qRegisterMetaType<move_data>("move_data");
+
+    engine.load(QUrl(QStringLiteral("qml/main.qml")));
     if (engine.rootObjects().isEmpty())
         return -1;
 

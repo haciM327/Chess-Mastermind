@@ -1,9 +1,11 @@
 #include "qmlfuncs.h"
+//#include "analyzer/analyzer.hpp"
 #include <QDebug>
 #include <fstream>
 #include <filesystem>
 #include <dirent.h>
 #include <iostream>
+#include <string>
 #ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
@@ -19,40 +21,11 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 }
 
 
- 
-bool Qmlfuncs::getport()
-{
- 
-    DIR *pDir;
-    bool bExists = false;
- 
-    pDir = opendir ("../share");
- 
-    if (pDir != NULL)
-    {
-        bExists = true;
-        port = true;    
-        (void) closedir (pDir);
-    }
-
-    return bExists;
-}
 void Qmlfuncs::addGame(QString pgn, QString name) {
-std::string path;
-#ifdef _WIN32
-    path = ".\\analyzer\\games\\";
-#else
-    
-    if (getport()) {
-        path = "../share/chess-mastermind/games/";
-    } else {
-        path = "/usr/local/share/chess-mastermind/games/";
-    }
-#endif
-
+    std::string path = "./games/";
     path += name.toStdString().c_str();
     std::ofstream outfile (path);
-
+    cout << path << endl;
     outfile << pgn.toStdString().c_str();
 
     outfile.close();
@@ -62,52 +35,23 @@ std::string path;
 QList<QString> Qmlfuncs::getGames() {
     QString path;
     QList<QString> return_value;
-#ifdef _WIN32
-    path = ".\\games\\";
+
+    path = "./games/";
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
     }
-#else
-    if (getport()) {
-        path = "../share/chess-mastermind/games";
-        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 32)));
-        }
-    } else {
-        path = "/usr/local/share/chess-mastermind/games";
-        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 40)));
-        }
-    }
-#endif
-    
-    
     return return_value;
 }
 
 QList<QString> Qmlfuncs::getEngines() {
     QString path;
     QList<QString> return_value;
-#ifdef _WIN32
-    path = ".\\engines\\";
+    path = "./engines/";
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));
     }
-#else
-    if (getport()) {
-        path = "../share/chess-mastermind/engines/";
-        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 34)));
-        }
-    } else {
-        path = "/usr/local/share/chess-mastermind/engines/";
-        for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
-            return_value.append(QString::fromStdString(entry.path().string().erase(0, 42)));
-        }
-    }
-#endif
-    
-    
+
+
     return return_value;
 }
 
@@ -120,82 +64,53 @@ QString Qmlfuncs::getos() {
 }
 
 void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
-    QString cmd;
+    // Sets up a pipe and then runs the analyzer
+    data = setup_pipe(engine.toStdString(), depth.toInt(), game.toStdString());
 
-#ifdef _WIN32
-    cmd = ".\\analyzer\\analyze.exe ";
-    cmd += engine;
-    cmd += " ";
-    cmd += depth;
-    cmd += " ";
-    cmd += game;
-    cmd += " true";
-    //std::system(cmd.toStdString().c_str());
-    STARTUPINFOA si;
-    PROCESS_INFORMATION pi;
-
-    ZeroMemory( &si, sizeof(si) );
-    si.cb = sizeof(si);
-    ZeroMemory( &pi, sizeof(pi) );
-    char *command = new char[cmd.toStdString().size() + 1]; //= {'\0'};
-    strncpy(command, cmd.toStdString().c_str(), cmd.toStdString().size());
-    // Start the child process.
-    if( !CreateProcessA( NULL,   // No module name (use command line)
-                       command,        // Command line
-                       NULL,           // Process handle not inheritable
-                       NULL,           // Thread handle not inheritable
-                       FALSE,          // Set handle inheritance to FALSE
-                       CREATE_NO_WINDOW,              // No creation flags
-                       NULL,           // Use parent's environment block
-                       NULL,           // Use parent's starting directory
-                       &si,            // Pointer to STARTUPINFO structure
-                       &pi )           // Pointer to PROCESS_INFORMATION structure
-        )
-    {
-        printf( "CreateProcess failed (%d).\n", GetLastError() );
-        return;
-    }
-
-    // Wait until child process exits.
-    WaitForSingleObject( pi.hProcess, INFINITE );
-
-    // Close process and thread handles.
-    CloseHandle( pi.hProcess );
-    CloseHandle( pi.hThread );
-#else
-
-    int pid = fork();
-    if (pid == 0) {
-        // Child process
-        char *eng = new char[engine.size() + 1];
-        strncpy(eng, engine.toStdString().c_str(), engine.size());
-        eng[engine.size()] = '\0';  // Ensure null termination
-        char *dep = new char[depth.size() + 1];
-        strncpy(dep, depth.toStdString().c_str(), depth.size());
-        dep[depth.size()] = '\0'; 
-        char *gam = new char[game.size() + 1];
-        strncpy(gam, game.toStdString().c_str(), game.size());
-        gam[game.size()] = '\0';
-        if (getport()) {
-            execl("./analyze", "./analyze", eng, dep, gam, "true", nullptr);
-        } else {
-            std::cout << eng << dep << gam << "\n";
-            execl("/usr/local/bin/analyze", "/usr/local/bin/analyze", eng, dep, gam, "false", nullptr);
-        }
-        // If execl fails
-        perror("execl failed");
-        delete[] eng;
-        delete[] gam;
-        exit(EXIT_FAILURE);  
-    } else if (pid > 0) {
-        int status;
-        waitpid(pid, &status, 0);
-    } else {
-        printf("pid failed\n");
-    }
-    // Use a non-zero exit code to indicate failure
-#endif
-
-    
 }
 
+QString Qmlfuncs::get_fen() {
+    return data.info_list[current_move].fen;
+}
+
+move_data Qmlfuncs::move_ahead() {
+    // Updates the current move number
+    current_move++;
+
+    // Checks to see if the current move number is greater than the number of moves
+    if (current_move > data.headers.moves.size()) {
+        // If it is, it sets the current move number to the number of moves
+        current_move = data.headers.moves.size();
+    }
+
+    // Updates the fen
+    fen = data.info_list[current_move].fen;
+
+    // Returns the move data
+    return data.info_list[current_move];
+}
+
+move_data Qmlfuncs::move_back() {
+    // Updates the current move number
+    current_move--;
+
+    // Checks to see if the current move number is less than 0
+    if (current_move < 0) {
+        // If it is, it sets the current move number to 0
+        current_move = 0;
+    }
+
+    // Updates the fen
+    fen = data.info_list[current_move].fen;
+
+    // Returns the move data
+    return data.info_list[current_move];
+}
+
+int Qmlfuncs::get_move_num() {
+    return current_move;
+}
+
+game_data Qmlfuncs::get_headers() {
+    return data.headers;
+}
