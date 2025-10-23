@@ -27,9 +27,10 @@ qt_standard_project_setup(REQUIRES 6.6)
 file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ./analyzer/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
-file(COPY ./main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
-file(COPY ./menu.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+file(COPY ./qml/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+file(COPY ./qml/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+file(COPY ./qml/menu.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+
 
 
 set(PROJECT_SOURCES
@@ -42,12 +43,14 @@ set(PROJECT_SOURCES
         #mainwindow.ui
 )
 add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
+
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Chess-Mastermind
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-    qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES main.qml
+
+    qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0
     SOURCES qmlfuncs.h qmlfuncs.cpp
     )
     # Define target properties for Android with Qt 6 as:

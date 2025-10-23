@@ -5,10 +5,12 @@
 #include <dirent.h>
 #include <QObject>
 #include "analyzer/analyzer.hpp"
+
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");
+
     QQmlApplicationEngine engine;
 
     qRegisterMetaType<game_data>("game_data");

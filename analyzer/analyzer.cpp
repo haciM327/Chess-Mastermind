@@ -165,7 +165,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
     // Loops through the moves in the game
     for (auto& qStrmove : data.moves) {
-
+        std::cout << fen << endl;
         std::cout << first_best_move << endl;
 
         std::string move = qStrmove.toStdString();
@@ -277,7 +277,8 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         int best_eval_change = best_move_eval - last_eval;
 
         // If black played the move we flip the sign of these since a positive change is good for white but bad for black
-        if (board.sideToMove() == Color::BLACK) {
+        std::cout << board.sideToMove() << std::endl;
+        if (board.sideToMove() == Color::WHITE) {
             eval_change = -eval_change;
             best_eval_change = -best_eval_change;
         }

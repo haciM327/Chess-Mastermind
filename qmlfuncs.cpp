@@ -1,5 +1,4 @@
 #include "qmlfuncs.h"
-//#include "analyzer/analyzer.hpp"
 #include <QDebug>
 #include <fstream>
 #include <filesystem>
