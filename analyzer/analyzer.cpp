@@ -184,7 +184,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         // parseSan function doesn't work with castling so we manually convert to Uci and then put it through uci::uciToMove
         if (move == "O-O" || move == "O-O-O") {
 
-            // There are only 4 ways a castle can happen in a game of chess (both white and black can both short and long castle) so the conversion is simple)
+            // There are only 4 ways a castle can happen in a game of chess (both white and black can both short and long castle) so the conversion is simple
             Color turn = board.sideToMove();
 
             if (turn == Color::WHITE) {
@@ -281,6 +281,8 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         if (board.sideToMove() == Color::WHITE) {
             eval_change = -eval_change;
             best_eval_change = -best_eval_change;
+        } else {
+            eval = -eval;
         }
 
         // Starts with Best Great and Brilliant moves, which all require the best move to be played
