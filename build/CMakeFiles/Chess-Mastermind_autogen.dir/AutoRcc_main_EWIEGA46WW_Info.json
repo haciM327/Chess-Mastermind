@@ -1,0 +1,19 @@
+{
+	"BUILD_DIR" : "/home/micah/Chess-Mastermind/build/Chess-Mastermind_autogen",
+	"CMAKE_BINARY_DIR" : "/home/micah/Chess-Mastermind/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/micah/Chess-Mastermind/build",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/micah/Chess-Mastermind",
+	"CMAKE_SOURCE_DIR" : "/home/micah/Chess-Mastermind",
+	"INCLUDE_DIR" : "/home/micah/Chess-Mastermind/build/Chess-Mastermind_autogen/include",
+	"INPUTS" : [ "/home/micah/Chess-Mastermind/qml/main.qml" ],
+	"LOCK_FILE" : "/home/micah/Chess-Mastermind/build/CMakeFiles/Chess-Mastermind_autogen.dir/AutoRcc_main_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "--no-zstd", "-name", "main" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_main.cpp",
+	"RCC_EXECUTABLE" : "/home/micah/Qt/6.7.2/gcc_64/./libexec/rcc",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "/home/micah/Chess-Mastermind/build/CMakeFiles/Chess-Mastermind_autogen.dir/AutoRcc_main_EWIEGA46WW_Used.txt",
+	"SOURCE" : "/home/micah/Chess-Mastermind/main.qrc",
+	"VERBOSITY" : 0
+}
