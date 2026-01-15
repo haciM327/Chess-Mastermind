@@ -1,19 +1,19 @@
+#ifndef ANALYZER_H
+#define ANALYZER_H
 #include <QtCore/qcontainerfwd.h>
 #include <string>
-#include "../include/chess.hpp"
 #include <vector>
-using namespace chess;
-using namespace std;
-
+#include <QPointer>
+#include "../include/chess.hpp"
 #include <QString>
 #include <QStringList>
 #include <QMetaType>
+#include <QObject>
 
-#ifndef GAME_DATA_H
-#define GAME_DATA_H
+
 // Structures
 struct game_data {
-    Q_GADGET;
+    Q_GADGET
 
     Q_PROPERTY(QString event MEMBER event);
     Q_PROPERTY(QString site MEMBER site);
@@ -38,13 +38,10 @@ struct game_data {
 
 Q_DECLARE_METATYPE(game_data)
 
-#endif
 
-#ifndef MOVE_DATA_H
-#define MOVE_DATA_H
 
 struct move_data {
-    Q_GADGET;
+    Q_GADGET
 
     Q_PROPERTY(QString best_move MEMBER best_move);
     Q_PROPERTY(int eval MEMBER eval);
@@ -63,30 +60,27 @@ struct move_data {
 
 Q_DECLARE_METATYPE(move_data)
 
-#endif
 
 struct values;
 
-#ifndef ALL_DATA_H
-#define ALL_DATA_H
+
 struct all_data {
-    vector<move_data> info_list;
+    std::vector<move_data> info_list;
     game_data headers;
 };
-#endif
+
+
 
 // Functions
-vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
+std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
 all_data analyze(FILE* &read_pipe, FILE* &write_pipe, const std::string& engine_path, int depth, const std::string& game_path);
 all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path);
 game_data read_pgn(const std::string& f);
-std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, Board &board);
+std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
 
 
-#ifndef PGNPARSER_H
-#define PGNPARSER_H
 // Classes
-class PGNParser : public pgn::Visitor {
+class PGNParser : public chess::pgn::Visitor {
     public:
         game_data game;
         virtual ~PGNParser();
@@ -96,4 +90,7 @@ class PGNParser : public pgn::Visitor {
         void move(std::string_view move, std::string_view comment);
         void endPgn();
 };
+
+
+extern QPointer<QObject> qfuncs;
 #endif

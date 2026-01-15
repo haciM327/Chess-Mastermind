@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="/qt/qml/main/">
+    <file alias="qml/main.qml">/home/micah/Chess-Mastermind/qml/main.qml</file>
+    <file alias="main.qrc">/home/micah/Chess-Mastermind/main.qrc</file>
+  </qresource>
+</RCC>
+

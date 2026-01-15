@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(CMAKE_CXX_COMPILER "g++")
-set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG -std=gnu++17")
-project(chess-mastermind VERSION 0.6 LANGUAGES CXX)
+
+project(Chess-Mastermind VERSION 0.3 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
@@ -11,59 +9,69 @@ set(CMAKE_AUTORCC ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_PREFIX_PATH ~/Qt/6.7.2/gcc_64)
 
 if (UNIX AND NOT APPLE)
     set(LINUX TRUE)
-
 endif()
-
+if(NOT LINUX)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ./)
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ./bin)
+endif()
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Quick Gui)
 find_package(Qt6 REQUIRED COMPONENTS QuickControls2)
 qt_standard_project_setup(REQUIRES 6.6)
 
-#add_subdirectory(analyzer)
-
+add_subdirectory(analyzer)
 file(COPY ./engines DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+<<<<<<< Updated upstream
+file(COPY ./analyzer/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/analyzer)
+=======
 file(COPY ./qml/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
 file(COPY ./qml/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
 file(COPY ./qml/menu.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+file(COPY ./qml/Test.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
+>>>>>>> Stashed changes
 
 
 
 set(PROJECT_SOURCES
         main.cpp
-        analyzer/analyzer.cpp
-        analyzer/analyzer.hpp
-        include/chess.hpp
+<<<<<<< Updated upstream
         #mainwindow.cpp
         #mainwindow.h
         #mainwindow.ui
+=======
+        analyzer/analyzer.cpp
+        analyzer/analyzer.hpp
+        include/chess.hpp
+>>>>>>> Stashed changes
 )
-add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX)
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(Chess-Mastermind
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-
-    qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0
+qt_add_qml_module(Chess-Mastermind URI main QML_FILES qml/main.qml
+    RESOURCES main.qrc
     SOURCES qmlfuncs.h qmlfuncs.cpp
     )
-    # Define target properties for Android with Qt 6 as:
-    #    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-    #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-    # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
+# Define target properties for Android with Qt 6 as:
+#    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
+#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
+# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 else()
     if(ANDROID)
         add_library(Chess-Mastermind SHARED
             ${PROJECT_SOURCES}
         )
-        # Define properties for Android with Qt 5 after find_package() calls as:
-        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
+# Define properties for Android with Qt 5 after find_package() calls as:
+#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(Chess-Mastermind
             ${PROJECT_SOURCES}
@@ -75,7 +83,7 @@ target_link_libraries(Chess-Mastermind PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
 if(${QT_VERSION} VERSION_LESS 6.1.0)
-    set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Chess-Mastermind)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.Chess-Mastermind)
 endif()
 set_target_properties(Chess-Mastermind PROPERTIES
     ${BUNDLE_ID_OPTION}
@@ -95,3 +103,4 @@ install(TARGETS Chess-Mastermind
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Chess-Mastermind)
 endif()
+

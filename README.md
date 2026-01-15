@@ -4,68 +4,68 @@ Chess Mastermind is a project that is designed to help chess players get better 
 
 # Requirements
 
-An amd64/x64 Linux or Windows operating system.
+An amd64/x64 Linux or Windows operating system and python3.10 (other versions not tested)
 # Installation
-Installer files are available for Windows and Linux. Macos is not offically supported yet but you can try building from source.
-## Debian or Ubuntu based linux
-After downloading, run:
-```
-cd Downloads
-sudo dpkg -i chess_mastermind-0.6.0.x86_64.deb
-sudo apt install -f
-```
-
-## Red Hat based linux
-After downloading, run:
-```
-cd Downloads
-sudo dnf install chess_mastermind-0.6.0.x86_64.rpm
-```
-
-## Windows
-Just double click the installer and follow steps to install. Then run as an administrator.
+Installer files are available for Windows and Linux. Double-click to install. On Linux you will need to add /usr/local/bin/chess-mastermind to the path (fix coming). For Macos or other operating systems, you will need to build from source. Keep in mind these operating systems are not officially supported and may not work as intended.
 
 # Compilation
 
+If you intend on compiling from source, please use the source code that comes with the release do not clone the repository as the current code has a high liklihood of not building correctly
+
 ## Prerequisites
 
-To compile from source you will need some packages like cmake, qt6, qt6-widgets, a c/c++ compiler.
+To compile from source you will need some basic tools like cmake, qt6, qt6-widgets, a c/c++-compiler, python3.10, and git. Python also has to have chess and pygame installed. They can be installed like ```python -m pip install chess pygame``` 
 
 ### Debian or Ubuntu based Linux
 
-Install prerequisites
-```
-sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev
-```
-
-### Fedora or Red Hat based Linux
-
 To install the prerequisites you will need to have root access and follow the steps below:
+
 ```
-sudo dnf update
-sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel git
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-get install build-essential cmake qt6-base-dev libgl1-mesa-dev git
 ```
+
+Now you need to install python which may have right version pre-installed depending on the version of Linux you are using. You can check with ```python3 --version```.
+If it returns a python3.10 version you can run ```sudo apt-get install python3-dev``` and have everything all set to go and you can skip the next steps!
+
+If the right version is not installed you will need to build python from source. Use the following commands:
+
+```
+wget https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tgz
+tar -xf python-3.10.13.tgz
+cd python-3.10.13
+mkdir build && cd build
+../configure --enable-optimizations
+make
+sudo make install
+```
+Feel free to change and customize the above steps to fit your python needs!
+Now all prerequisites are installed and you can start compiling!
+
+### Other Linuxs
+
+I don't know, use yum or whatever.
+
+### Windows
+
+Install you favorite c/c++ compiler whether that be mingw or msvc. Install cmake and python from [cmake.org](cmake.org) and [python.org](python.org) respectively. Install github desktop from github or whatever git you use. Open up powershell and follow the compilation steps below
 
 ## Compiling
 
-1. Clone the repository with:
-
-   ```git clone https://github.com/haciM327/Chess-Mastermind.git```
-
-2. Move into the repository with:
+1. Move into the repository with:
 
    ```cd Chess-Mastermind```
-
-3. Make a build directory and move into it
+   
+2. Make a build directory and move into it
 
    ```mkdir build && cd build```
 
-4. Run cmake to make create the build space
+3. Run cmake to make create the build space
 
    ```cmake ..```
 
-5. Build the files
+4. Build the files
 
-   ```make -j${nproc}```
+   ```cmake --build . --config Release```
 
-6. All done! you have now build the project and can run it whenever.
+5. All done! you have now build the project and can run it whenever. You can install it to any directory you want.
