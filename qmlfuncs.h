@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include "analyzer/analyzer.hpp"
 
 class Qmlfuncs : public QObject
 {
@@ -10,6 +11,7 @@ class Qmlfuncs : public QObject
     QML_ELEMENT
 public:
     explicit Qmlfuncs(QObject *parent = nullptr);
+
 
     Q_INVOKABLE void addGame(QString pgn, QString name);
 
@@ -20,6 +22,24 @@ public:
     Q_INVOKABLE QString getos();
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth);
+
+    Q_INVOKABLE QString get_fen();
+
+    Q_INVOKABLE move_data move_ahead();
+
+    Q_INVOKABLE move_data move_back();
+
+    Q_INVOKABLE int get_move_num();
+
+    Q_INVOKABLE game_data get_headers();
+
+    bool port;
+
+    QString fen;
+
+    all_data data;
+
+    int current_move = 0;
 
 signals:
 };
