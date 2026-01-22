@@ -1,10 +1,11 @@
 #include "qmlfuncs.h"
-#include <QDebug>
 #include <fstream>
 #include <filesystem>
 #include <dirent.h>
 #include <iostream>
 #include <string>
+#include <QtConcurrent/QtConcurrent>
+#include "./analyzer/analyzer.hpp"
 #ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
@@ -13,6 +14,9 @@
     #include <sys/types.h>
     #include <sys/wait.h>
 #endif
+
+using namespace std;
+
 Qmlfuncs::Qmlfuncs(QObject *parent)
     : QObject{parent}
 {
@@ -21,10 +25,15 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 
 
 void Qmlfuncs::addGame(QString pgn, QString name) {
+
+#ifdef _WIN32
+    std::string path = ".\\analyzer\\games\\";
+#else
     std::string path = "./games/";
+#endif
+
     path += name.toStdString().c_str();
     std::ofstream outfile (path);
-    cout << path << endl;
     outfile << pgn.toStdString().c_str();
 
     outfile.close();
@@ -33,9 +42,12 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 
 QList<QString> Qmlfuncs::getGames() {
     QString path;
-    QList<QString> return_value;
-
+#ifdef _WIN32
+    path = ".\\games\\";
+#else
     path = "./games/";
+#endif
+    QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
     }
@@ -44,13 +56,15 @@ QList<QString> Qmlfuncs::getGames() {
 
 QList<QString> Qmlfuncs::getEngines() {
     QString path;
-    QList<QString> return_value;
+#ifdef _WIN32
+    path = ".\\engines\\";
+#else
     path = "./engines/";
+#endif
+    QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));
     }
-
-
     return return_value;
 }
 
@@ -63,10 +77,12 @@ QString Qmlfuncs::getos() {
 }
 
 void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
-    // Sets up a pipe and then runs the analyzer
-    data = setup_pipe(engine.toStdString(), depth.toInt(), game.toStdString());
-
+    QtConcurrent::run([this, game, engine, depth]{
+        this->data = setup_pipe(engine.toStdString(), depth.toInt(), game.toStdString());
+    });
 }
+
+
 
 QString Qmlfuncs::get_fen() {
     return data.info_list[current_move].fen;

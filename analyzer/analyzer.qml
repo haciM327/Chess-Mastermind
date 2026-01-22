@@ -1,5 +1,5 @@
-import QtQuick 6.2
-import QtQuick.Controls 6.2
+import QtQuick 6.6
+import QtQuick.Controls 6.6
 
 Rectangle {
     id: rectangle
@@ -1271,17 +1271,14 @@ Rectangle {
         id: cont
         visible: true
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: 10
-        width: 132
-        height: 52
+        width: 200
+        height: 100
         text: "Continue"
         onClicked: {
-            percent.visible = false;
-            progressBarOutline.visible = false;
-            progressBarFill.visible = false;
             if (rectangle.setup === true) {
                 cont.visible = false;
                 board.visible = true;
+                //whiteRook.visible = true
                 let i = 0;
                 rectangle.set_board(funcs.get_fen());
                 rectangle1.focus = true;
@@ -1292,38 +1289,11 @@ Rectangle {
                 white_player.visible = true;
                 black_player.text = funcs.get_headers().black;
                 black_player.visible = true;
-            }
-        }
-        background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 40
-            color: "#e91e63"
-            border.color: "#000000"
-            border.width: 1
-            radius: 6
-        }
-    }
-    Rectangle {
-        id: whiteEval
-        width: 100
-        height: 100
-        color: 'white'
-    }
-    Rectangle {
-        id: blackEval
-        width: 100
-        height: 100
-        color: 'black'
-    }
-    GridView {
-        id: moveList
-        width: 100
-        height: 100
-        model: 8
-        delegate: Rectangle {
-            width: 100
-            height: 100
-            color: index % 2 === 0 ? 'white' : 'black'
+                //moveIcon.visible = true
+            } //else {
+            //funcs.error("An error has occured, this is likely due to the engine picked out.\nPlease ensure you pick an engine that works with your machine.\nIt may also be due to the depth or game selected.")
+            //Qt.quit()
+            //}
         }
     }
 }

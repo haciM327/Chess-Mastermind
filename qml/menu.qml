@@ -291,12 +291,17 @@ Rectangle {
             radius: 6
         }
         onClicked: {
-            rectangle.visible = false;
-            menu.visible = false;
+            runanalyzer.visible = false;
+            enginelist.visible = false;
+            gamelist.visible = false;
+            depthrect.visible = false;
+            label.text = "Analyzing..."
+            progressBarOutline.visible = true;
+            progressBarFill.visible = true;
+            progressBarFill.width = 0;
+            percent.visible = true;
             //switchPage("analyzer.qml")
             funcs.runAnalyzer("./games/" + gamelist.currentValue, "./engines/" + enginelist.currentValue, depth.text);
-            switchPage("analyzer.qml");
-            rectangle.visible = true;
         }
     }
 }

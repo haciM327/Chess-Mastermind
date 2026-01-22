@@ -4,21 +4,35 @@
 #include <QQmlContext>
 #include <dirent.h>
 #include <QObject>
+#include <QPointer>
 #include "analyzer/analyzer.hpp"
 
 int main(int argc, char *argv[])
 {
+
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");
-
     QQmlApplicationEngine engine;
 
     qRegisterMetaType<game_data>("game_data");
     qRegisterMetaType<move_data>("move_data");
 
     engine.load(QUrl(QStringLiteral("qml/main.qml")));
+
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    QObject *root = engine.rootObjects().first(); // root QML object
+    QObject *funcObject = root->findChild<QObject*>("funcs", Qt::FindChildrenRecursively);
+
+
+    for (int i = 0; i < funcObject->metaObject()->methodCount(); i++) {
+        QMetaMethod method = funcObject->metaObject()->method(i);
+    }
+    if (!funcObject) {
+        qWarning() << "backend object not found";
+    }
+    qfuncs = funcObject;
 
     return app.exec();
 }

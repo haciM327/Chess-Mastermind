@@ -25,9 +25,14 @@ extern "C++" {
 #include <QString>
 #include <typeinfo>
 #include <math.h>
+#include <QtConcurrent/QtConcurrent>
+#include <QMetaObject>
+#include <QVariant>
 
-
+using namespace std;
 using namespace chess;
+
+QPointer<QObject> qfuncs;
 
 struct values {
     int queen;
@@ -116,9 +121,6 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     // Creates a board object to track moves and attackers
     Board board;
 
-    for (const auto& move : data.moves) {
-        std::cout << move.toStdString() << endl;
-    }
 
     // Runs the engine
     fprintf(write_pipe, "go depth %d\n", depth);
@@ -157,16 +159,22 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         first_best_move = pv2.substr(pv2.find(" pv") + 4, 4);
         second_best_move = "forced";
     }
-    std::cout << first_best_move << endl;
     best_move_eval = atoi(pv1.substr(pv1.find("cp") + 3, 2).c_str());
     second_best_move_eval = atoi(pv2.substr(pv2.find("cp") + 3, 2).c_str());
 
     last_eval = best_move_eval;
 
+    // Tracks progress through the move list
+    double counter = -1;
+
     // Loops through the moves in the game
     for (auto& qStrmove : data.moves) {
-        std::cout << fen << endl;
-        std::cout << first_best_move << endl;
+        // Updates counter
+        counter = counter + 1;
+        // Updates the progress bar
+        if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, (counter/(data.moves.size())*100)))) {
+            std::cout << "Failed to call loading screen method" << endl;
+        }
 
         std::string move = qStrmove.toStdString();
         // Clears the vector of lines to reduce memory usage
@@ -277,7 +285,6 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         int best_eval_change = best_move_eval - last_eval;
 
         // If black played the move we flip the sign of these since a positive change is good for white but bad for black
-        std::cout << board.sideToMove() << std::endl;
         if (board.sideToMove() == Color::WHITE) {
             eval_change = -eval_change;
             best_eval_change = -best_eval_change;
@@ -366,7 +373,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
         // The rest of the checks are straightforward and just check the eval change minus the best eval change and compare it to the right numbers
         int relative_eval_change = eval_change - best_eval_change;
-        if (relative_eval_change < 10) {
+        if (relative_eval_change < -5) {
             move_type = "Excellent Move";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -383,7 +390,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 15) {
+        if (relative_eval_change < 20) {
             move_type = "Good Move";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -400,7 +407,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 20) {
+        if (relative_eval_change < 100) {
             move_type = "Inaccuracy";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -417,7 +424,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 150) {
+        if (relative_eval_change < 300) {
             move_type = "Mistake";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -434,7 +441,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change >= 150) {
+        if (relative_eval_change >= 300) {
             move_type = "Blunder";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -454,6 +461,9 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     }
     fclose(read_pipe);
     fclose(write_pipe);
+
+    // Send finished signal to QML app
+    QMetaObject::invokeMethod(qfuncs, "finished", Qt::QueuedConnection);
 
     return {info_list, data};
 }
@@ -571,7 +581,6 @@ game_data read_pgn(const std::string& f) {
     file.close();
 
     game_data game = parse.game;
-    std::cout << typeid(game).name();
     return game;
 }
 
