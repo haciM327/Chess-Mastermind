@@ -24,7 +24,6 @@ extern "C++" {
 #include "../include/chess.hpp"
 #include <QString>
 #include <typeinfo>
-#include <math.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaObject>
 #include <QVariant>
@@ -295,6 +294,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         // Starts with Best Great and Brilliant moves, which all require the best move to be played
         // Great Moves are when you play the only good move: second best move is minimum an innacurate move
         // Brilliant Moves are Best moves that sacrifice a piece
+        cout << "PAY ATTENTION: " << best_eval_change - eval_change << endl;
         if (move == first_best_move) {
             // Pulls the move_to square from the full move
             std::string move_to = move.substr(2, 2);
@@ -326,12 +326,12 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             // Finally if the second best would be an inaccuracy or worse (<30 centipawns) we return a Great Move
             int second_best_eval_change = second_best_move_eval - last_eval;
 
-            // Switch for black again
-            if (board.sideToMove() == Color::BLACK) {
+            // Switch for white again
+            if (board.sideToMove() == Color::WHITE) {
                 second_best_eval_change = -second_best_eval_change;
             }
 
-            if ((second_best_eval_change - best_eval_change) < -5) {
+            if ((second_best_eval_change - best_eval_change) > 20) {
                 best_move_eval = atoi(pv1.substr(pv1.find("cp") + 3, 2).c_str());
                 second_best_move_eval = atoi(pv2.substr(pv2.find("cp") + 3, 2).c_str());
                 move_type = "Great Move";
@@ -353,6 +353,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
             best_move_eval = atoi(pv1.substr(pv1.find("cp") + 3, 2).c_str());
             second_best_move_eval = atoi(pv2.substr(pv2.find("cp") + 3, 2).c_str());
+
             // Could be nothing else so we return with a Best Move
             move_type = "Best Move";
             fen = new_fen;
@@ -372,8 +373,8 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         }
 
         // The rest of the checks are straightforward and just check the eval change minus the best eval change and compare it to the right numbers
-        int relative_eval_change = eval_change - best_eval_change;
-        if (relative_eval_change < -5) {
+        int relative_eval_change = best_eval_change - eval_change;
+        if (relative_eval_change < 10) {
             move_type = "Excellent Move";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -424,7 +425,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 300) {
+        if (relative_eval_change < 500) {
             move_type = "Mistake";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -441,7 +442,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change >= 300) {
+        if (relative_eval_change >= 500) {
             move_type = "Blunder";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
