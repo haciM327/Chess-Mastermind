@@ -261,7 +261,7 @@ Rectangle {
                 visible: false
             }
             Keys.onPressed: event => {
-                if (event.key === Qt.Key_Left) {
+                if (event.key === Qt.Key_Left && cont.visible == false) {
                     let info = funcs.move_back();
                     rectangle.best_move = info.best_move;
                     rectangle.cp = info.eval;
@@ -278,7 +278,7 @@ Rectangle {
                     if (rectangle.move_type) {
                         moveIcon.source = "../img/" + rectangle.move_type + '.png';
                     }
-                } else if (event.key === Qt.Key_Right) {
+                } else if (event.key === Qt.Key_Right && cont.visible == false) {
                     let info = funcs.move_ahead();
                     rectangle.best_move = info.best_move;
                     rectangle.cp = String(info.eval);

@@ -1,13 +1,14 @@
 #ifdef _WIN32
-#include <io.h>
-extern "C++" {
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <windows.h>
-}
+    #include <io.h>
+    extern "C++" {
+        #define WIN32_LEAN_AND_MEAN
+        #define NOMINMAX
+        #include <windows.h>
+    }
 #else
-#include <sys/select.h>
+    #include <sys/select.h>
 #endif
+
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
@@ -20,7 +21,7 @@ extern "C++" {
 #include <string>
 #include <fstream>
 #include <fcntl.h>
-#include "analyzer.hpp"
+#include "../include/analyzer.hpp"
 #include "../include/chess.hpp"
 #include <QString>
 #include <typeinfo>
@@ -42,7 +43,7 @@ struct values {
 };
 
 // Function to communicate with engine
-all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path) {
+all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads) {
 
     #ifdef _WIN32
         FILE* read_pipe = _fdopen(read_fd, "r");
@@ -99,6 +100,9 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     }
     // Sets up the engine to mutipv 2
     fprintf(write_pipe, "setoption name MultiPV value 2\n");
+    fflush(write_pipe);
+
+    fprintf(write_pipe, "setoption name Threads value %d\n", threads);
     fflush(write_pipe);
 
     fprintf(write_pipe, "isready\n");
@@ -294,7 +298,6 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         // Starts with Best Great and Brilliant moves, which all require the best move to be played
         // Great Moves are when you play the only good move: second best move is minimum an innacurate move
         // Brilliant Moves are Best moves that sacrifice a piece
-        cout << "PAY ATTENTION: " << best_eval_change - eval_change << endl;
         if (move == first_best_move) {
             // Pulls the move_to square from the full move
             std::string move_to = move.substr(2, 2);
@@ -469,7 +472,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     return {info_list, data};
 }
 
-all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path) {
+all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path, int threads) {
 
     #ifdef _WIN32
         HANDLE hChildStd_IN_Rd, hChildStd_IN_Wr;
@@ -512,7 +515,7 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         int read_fd = _open_osfhandle((intptr_t)hChildStd_OUT_Rd, _O_RDONLY);
         int write_fd = _open_osfhandle((intptr_t)hChildStd_IN_Wr, _O_WRONLY);
 
-        all_data data = analyze(read_fd, write_fd, engine_path, depth, game_path);
+        all_data data = analyze(read_fd, write_fd, engine_path, depth, game_path, threads);
 
         CloseHandle(pi.hProcess);
         CloseHandle(pi.hThread);
@@ -556,7 +559,7 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         close(pipe_to_engine[0]);
         close(pipe_from_engine[1]);
 
-        data = analyze(pipe_from_engine[0], pipe_to_engine[1], engine_path, depth, game_path);
+        data = analyze(pipe_from_engine[0], pipe_to_engine[1], engine_path, depth, game_path, threads);
 
         // Close remaining pipe ends
         close(pipe_to_engine[1]);

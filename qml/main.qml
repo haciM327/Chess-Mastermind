@@ -21,13 +21,11 @@ Window {
         id: funcs
         objectName: "funcs"
         function reportProgress(progress: int) {
-            // `value` is provided by the signal
             percent.text = progress.toString() + '%';
             progressBarFill.width = progressBarOutline.width * (parseInt(percent.text.split('%')[0]) / 100);
 
         }
 
-        // matches `void finished()` in C++
         function finished() {
             percent.text = "100%"
             progressBarFill.width = progressBarOutline.width;

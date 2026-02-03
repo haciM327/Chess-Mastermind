@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include "analyzer/analyzer.hpp"
+#include "../include/analyzer.hpp"
 
 class Qmlfuncs : public QObject
 {
@@ -21,7 +21,7 @@ public:
 
     Q_INVOKABLE QString getos();
 
-    Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth);
+    Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth, QString threads);
 
     Q_INVOKABLE QString get_fen();
 

@@ -2,29 +2,6 @@
 
 Chess Mastermind is a project that is designed to help chess players get better at the game. Chess Mastermind does this by you inputting a chess game and it will tell you what you did right and what you did wrong. It can tell you what you should've done instead and how you can improve. It is a similar program to chess.com's game review however this program is entirely free and open-source, it can use any engine you want, and will eventually (although not yet) be able to give you in-depth help with chess strategies and tactics.
 
-# Requirements
-
-An amd64/x64 Linux or Windows operating system.
-# Installation
-Installer files are available for Windows and Linux. Macos is not offically supported yet but you can try building from source.
-## Debian or Ubuntu based linux
-After downloading, run:
-```
-cd Downloads
-sudo dpkg -i chess_mastermind-0.6.0.x86_64.deb
-sudo apt install -f
-```
-
-## Red Hat based linux
-After downloading, run:
-```
-cd Downloads
-sudo dnf install chess_mastermind-0.6.0.x86_64.rpm
-```
-
-## Windows
-Just double click the installer and follow steps to install. Then run as an administrator.
-
 # Compilation
 
 ## Prerequisites
@@ -38,7 +15,7 @@ Install prerequisites
 sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev
 ```
 
-### Fedora or Red Hat based Linux
+### Fedora based Linux
 
 To install the prerequisites you will need to have root access and follow the steps below:
 ```

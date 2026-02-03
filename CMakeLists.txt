@@ -33,9 +33,9 @@ file(COPY ./qml/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
 
 
 set(PROJECT_SOURCES
-        main.cpp
-        analyzer/analyzer.cpp
-        analyzer/analyzer.hpp
+        src/main.cpp
+        src/analyzer.cpp
+        include/analyzer.hpp
         include/chess.hpp
         #mainwindow.cpp
         #mainwindow.h
@@ -48,7 +48,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
     )
     qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES qml/main.qml qml/menu.qml qml/analyzer.qml
-    SOURCES qmlfuncs.h qmlfuncs.cpp
+    SOURCES include/qmlfuncs.h src/qmlfuncs.cpp
     )
     # Define target properties for Android with Qt 6 as:
     #    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -67,6 +67,7 @@ else()
         )
     endif()
 endif()
+target_include_directories(Chess-Mastermind PRIVATE include)
 target_link_libraries(Chess-Mastermind PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Gui Qt6::Quick Qt6::QuickControls2)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

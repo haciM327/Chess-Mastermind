@@ -42,6 +42,7 @@ Rectangle {
             label.text = qsTr("Select game depth and engine");
             analyze.visible = false;
             addGame.visible = false;
+            threadrect.visible = true;
             gamelist.visible = true;
             gamelist.model = funcs.getGames();
             enginelist.visible = true;
@@ -212,7 +213,7 @@ Rectangle {
         width: 137
         height: 40
         visible: false
-        model: ["test", "moretest"]
+        model: ["placeholder", "these should not be showing"]
         delegate: ItemDelegate {
             width: enginelist.width
             contentItem: Text {
@@ -254,10 +255,10 @@ Rectangle {
     Rectangle {
         id: depthrect
         visible: false
-        width: 137
+        width: 165
         height: 25
-        x: 572
-        y: 350
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: 10
         border.color: "#e91e63"
         border.width: 1
         color: "black"
@@ -265,11 +266,34 @@ Rectangle {
             id: depth
             y: 2.5
             x: 2.5
-            width: 134
+            width: 160
             font.pointSize: 10
             visible: false
             color: "#e91e63"
-            text: "Enter a depth value"
+            text: "Enter a depth value (18)"
+            selectByMouse: true
+        }
+    }
+
+    Rectangle {
+        id: threadrect
+        visible: false
+        width: 165
+        height: 25
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: 60
+        border.color: "#e91e63"
+        border.width: 1
+        color: "black"
+        TextInput {
+            id: threads
+            y: 2.5
+            x: 2.5
+            width: 160
+            font.pointSize: 10
+            visible: true
+            color: "#e91e63"
+            text: "How many threads? (1)"
             selectByMouse: true
         }
     }
@@ -295,13 +319,14 @@ Rectangle {
             enginelist.visible = false;
             gamelist.visible = false;
             depthrect.visible = false;
+            threadrect.visible = false;
             label.text = "Analyzing..."
             progressBarOutline.visible = true;
             progressBarFill.visible = true;
             progressBarFill.width = 0;
             percent.visible = true;
             //switchPage("analyzer.qml")
-            funcs.runAnalyzer("./games/" + gamelist.currentValue, "./engines/" + enginelist.currentValue, depth.text);
+            funcs.runAnalyzer("./games/" + gamelist.currentValue, "./engines/" + enginelist.currentValue, depth.text, threads.text);
         }
     }
 }

@@ -1,11 +1,11 @@
-#include "qmlfuncs.h"
+#include "../include/qmlfuncs.h"
 #include <fstream>
 #include <filesystem>
 #include <dirent.h>
 #include <iostream>
 #include <string>
 #include <QtConcurrent/QtConcurrent>
-#include "./analyzer/analyzer.hpp"
+#include "../include/analyzer.hpp"
 #ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
@@ -76,13 +76,32 @@ QString Qmlfuncs::getos() {
     #endif
 }
 
-void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth) {
-    QtConcurrent::run([this, game, engine, depth]{
-        this->data = setup_pipe(engine.toStdString(), depth.toInt(), game.toStdString());
+void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth, QString threads) {
+    QtConcurrent::run([this, game, engine, depth, threads]{
+        int thread_num;
+        int depth_num;
+
+        // Checks thread to depth to ensure inputted value is an int
+        // Defaults to 1 or 18 otherwise
+        if (threads.toInt() == 0) {
+            std::cout << "Thread count must be an integer greater than 0. Defaulting to 1." << std::endl;
+            thread_num = 1;
+        } else {
+            thread_num = threads.toInt();
+        }
+
+        if (depth.toInt() == 0) {
+            std::cout << "Depth count must be an integer greater than 0. Defaulting to 18." << std::endl;
+            depth_num = 18;
+        } else {
+            depth_num = depth.toInt();
+        }
+
+        // Runs the analyzer in the seperate thread created by QtConcurrent
+        // This ensures the loading screen and progress bar can be updated without stalling the application
+        this->data = setup_pipe(engine.toStdString(), depth_num, game.toStdString(), thread_num);
     });
 }
-
-
 
 QString Qmlfuncs::get_fen() {
     return data.info_list[current_move].fen;

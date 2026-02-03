@@ -5,7 +5,7 @@
 #include <dirent.h>
 #include <QObject>
 #include <QPointer>
-#include "analyzer/analyzer.hpp"
+#include "../include/analyzer.hpp"
 
 int main(int argc, char *argv[])
 {

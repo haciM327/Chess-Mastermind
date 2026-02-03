@@ -73,8 +73,8 @@ struct all_data {
 
 // Functions
 std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
-all_data analyze(FILE* &read_pipe, FILE* &write_pipe, const std::string& engine_path, int depth, const std::string& game_path);
-all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path);
+all_data analyze(FILE* &read_pipe, FILE* &write_pipe, const std::string& engine_path, int depth, const std::string& game_path, int threads);
+all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path, int threads);
 game_data read_pgn(const std::string& f);
 std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
 
