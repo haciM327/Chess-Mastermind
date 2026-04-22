@@ -6,6 +6,7 @@
 #include <string>
 #include <QtConcurrent/QtConcurrent>
 #include "../include/analyzer.hpp"
+#include "../include/funcs.hpp"
 #ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
@@ -84,14 +85,14 @@ void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth, QString 
         // Checks thread to depth to ensure inputted value is an int
         // Defaults to 1 or 18 otherwise
         if (threads.toInt() == 0) {
-            std::cout << "Thread count must be an integer greater than 0. Defaulting to 1." << std::endl;
+            log("Thread count must be an integer greater than 0. Defaulting to 1.\n");
             thread_num = 1;
         } else {
             thread_num = threads.toInt();
         }
 
         if (depth.toInt() == 0) {
-            std::cout << "Depth count must be an integer greater than 0. Defaulting to 18." << std::endl;
+            log("Depth count must be an integer greater than 0. Defaulting to 18.\n");
             depth_num = 18;
         } else {
             depth_num = depth.toInt();

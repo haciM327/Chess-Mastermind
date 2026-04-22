@@ -6,9 +6,13 @@
 #include <QObject>
 #include <QPointer>
 #include "../include/analyzer.hpp"
+#include "../include/funcs.hpp"
 
 int main(int argc, char *argv[])
 {
+    // Resets log
+    open_file();
+
 
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");

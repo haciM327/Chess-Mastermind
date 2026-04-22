@@ -1315,7 +1315,7 @@ Rectangle {
         height: 100
         color: 'black'
     }
-    GridView {
+    /*GridView {
         id: moveList
         width: 100
         height: 100
@@ -1324,6 +1324,6 @@ Rectangle {
             width: 100
             height: 100
             color: index % 2 === 0 ? 'white' : 'black'
-        }
-    }
+            }
+            }*/
 }

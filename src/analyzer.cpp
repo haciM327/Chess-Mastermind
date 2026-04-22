@@ -23,6 +23,7 @@
 #include <fcntl.h>
 #include "../include/analyzer.hpp"
 #include "../include/chess.hpp"
+#include "../include/funcs.hpp"
 #include <QString>
 #include <typeinfo>
 #include <QtConcurrent/QtConcurrent>
@@ -65,7 +66,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     // Read and print engine's response
     char buffer[4096];
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        std::cout << "engine: " << buffer;
+        log("engine: " + string(buffer));
         if (strstr(buffer, "uciok")) {
             break;
         }
@@ -93,7 +94,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     fflush(write_pipe);
 
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        std::cout << "engine: " << buffer;
+        log("engine: " + string(buffer));
         if (strstr(buffer, "readyok")) {
             break;
         }
@@ -109,7 +110,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     fflush(write_pipe);
 
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        std::cout << "engine: " << buffer;
+        log("engine: " + string(buffer));
         if (strstr(buffer, "readyok")) {
             break;
         }
@@ -131,7 +132,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
     // Reads the engine's response and puts it into a vector of lines
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        std::cout << "engine: " << buffer;
+        log("engine: " + string(buffer));
         lines.push_back(buffer);
         if (strstr(buffer, "bestmove")) {
             break;
@@ -176,7 +177,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         counter = counter + 1;
         // Updates the progress bar
         if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, (counter/(data.moves.size())*100)))) {
-            std::cout << "Failed to call loading screen method" << endl;
+            log("Failed to call loading screen method\n");
         }
 
         std::string move = qStrmove.toStdString();
@@ -239,7 +240,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         fflush(write_pipe);
 
         while (fgets(buffer, sizeof(buffer), read_pipe)) {
-            std::cout << "engine: " << buffer;
+            log("engine: " + string(buffer));
             lines.push_back(buffer);
             if (strstr(buffer, "readyok") != NULL) {
                 break;
@@ -253,7 +254,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
         // Reads the engine output
         while (fgets(buffer, sizeof(buffer), read_pipe) != NULL) {
-            std::cout << "engine: " << buffer;
+            log("engine: " + string(buffer));
             lines.push_back(buffer);
             if (strstr(buffer, "bestmove") != NULL) {
                 break;
@@ -265,17 +266,6 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         second_best_eval = atoi(lines[lines.size() - 2].substr(lines[lines.size() - 2].find("cp") + 2, 2).c_str());
         pv1 = lines[lines.size() - 3];
         pv2 = lines[lines.size() - 2];
-
-
-        // Checks if the move was forced
-        // If so nothing else is needed so we return
-        if (second_best_move == "forced") {
-            move_type = "Forced Move";
-            fen = new_fen;
-            info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
-            last_eval = eval;
-            continue;
-        }
 
         // Creates a lookup table for piece values
         values piece_values = {9, 5, 3, 3, 1};
@@ -323,6 +313,17 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
                 }
                 continue;
             }
+
+            // Checks if the move was forced
+            // If so nothing else is needed so we return
+            if (second_best_move == "forced") {
+                move_type = "Forced Move";
+                fen = new_fen;
+                info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
+                last_eval = eval;
+                continue;
+            }
+
             // Checks to see if the best move is the only good move
             // First we need to find the relative eval change to account for engine error
             // We do this by subtracting the best eval change from the second best
@@ -334,7 +335,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
                 second_best_eval_change = -second_best_eval_change;
             }
 
-            if ((second_best_eval_change - best_eval_change) > 20) {
+            if ((second_best_eval_change - best_eval_change) > 150) {
                 best_move_eval = atoi(pv1.substr(pv1.find("cp") + 3, 2).c_str());
                 second_best_move_eval = atoi(pv2.substr(pv2.find("cp") + 3, 2).c_str());
                 move_type = "Great Move";
@@ -376,8 +377,9 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         }
 
         // The rest of the checks are straightforward and just check the eval change minus the best eval change and compare it to the right numbers
-        int relative_eval_change = best_eval_change - eval_change;
-        if (relative_eval_change < 10) {
+        int relative_eval_change = abs(best_eval_change - eval_change);
+        log("REC: " + to_string(relative_eval_change) + "\n");
+        if (relative_eval_change < 30) {
             move_type = "Excellent Move";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -394,7 +396,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 20) {
+        if (relative_eval_change < 150) {
             move_type = "Good Move";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -411,7 +413,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 100) {
+        if (relative_eval_change < 300) {
             move_type = "Inaccuracy";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -428,7 +430,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change < 500) {
+        if (relative_eval_change < 600) {
             move_type = "Mistake";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
@@ -445,7 +447,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             }
             continue;
         }
-        if (relative_eval_change >= 500) {
+        if (relative_eval_change >= 600) {
             move_type = "Blunder";
             fen = new_fen;
             info_list.emplace_back(move_data{QString::fromStdString(first_best_move), eval, QString::fromStdString(move_type), QString::fromStdString(fen), QString::fromStdString(move)});
