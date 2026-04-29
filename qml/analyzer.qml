@@ -2,7 +2,7 @@ import QtQuick 6.2
 import QtQuick.Controls 6.2
 
 Rectangle {
-    id: rectangle
+    id: analyzer
     signal switchPage(string page)
     width: 1280
     height: 720
@@ -14,8 +14,8 @@ Rectangle {
     property string move_type: ""
     property string move: ''
     function set_board(fen) {
-        rectangle.clear_board();
-        rectangle.set_icon(rectangle.move);
+        analyzer.clear_board();
+        analyzer.set_icon(analyzer.move);
         let i = 0;
         fen = fen.split(" ")[0];
         let lines = fen.split("/");
@@ -170,9 +170,9 @@ Rectangle {
             i++;
             pos++;
         }
-        cp.text = qsTr(rectangle.cp);
-        best_move.text = qsTr(rectangle.best_move);
-        move_type.text = qsTr(rectangle.move_type);
+        cp.text = qsTr(analyzer.cp);
+        best_move.text = qsTr(analyzer.best_move);
+        move_type.text = qsTr(analyzer.move_type);
     }
     function clear_board() {
         for (let i = 1; i <= 64; i++) {
@@ -263,30 +263,30 @@ Rectangle {
             Keys.onPressed: event => {
                 if (event.key === Qt.Key_Left && cont.visible == false) {
                     let info = funcs.move_back();
-                    rectangle.best_move = info.best_move;
-                    rectangle.cp = info.eval;
-                    rectangle.move_type = info.move_type;
+                    analyzer.best_move = info.best_move;
+                    analyzer.cp = info.eval;
+                    analyzer.move_type = info.move_type;
                     board.fen = info.fen;
                     if (funcs.get_move_num() != 0) {
-                        rectangle.move = info.move;
+                        analyzer.move = info.move;
                     } else {
-                        rectangle.move_type = "";
-                        rectangle.move = "";
+                        analyzer.move_type = "";
+                        analyzer.move = "";
                         moveIcon.visible = false;
                     }
-                    rectangle.set_board(board.fen);
-                    if (rectangle.move_type) {
-                        moveIcon.source = "../img/" + rectangle.move_type + '.png';
+                    analyzer.set_board(board.fen);
+                    if (analyzer.move_type) {
+                        moveIcon.source = "../img/" + analyzer.move_type + '.png';
                     }
                 } else if (event.key === Qt.Key_Right && cont.visible == false) {
                     let info = funcs.move_ahead();
-                    rectangle.best_move = info.best_move;
-                    rectangle.cp = String(info.eval);
-                    rectangle.move_type = info.move_type;
+                    analyzer.best_move = info.best_move;
+                    analyzer.cp = String(info.eval);
+                    analyzer.move_type = info.move_type;
                     board.fen = info.fen;
-                    rectangle.move = info.move;
-                    rectangle.set_board(board.fen);
-                    moveIcon.source = "../img/" + rectangle.move_type + '.png';
+                    analyzer.move = info.move;
+                    analyzer.set_board(board.fen);
+                    moveIcon.source = "../img/" + analyzer.move_type + '.png';
                     if (funcs.get_move_num() != 0) {
                         moveIcon.visible = true;
                     }
@@ -1279,11 +1279,11 @@ Rectangle {
             percent.visible = false;
             progressBarOutline.visible = false;
             progressBarFill.visible = false;
-            if (rectangle.setup === true) {
+            if (analyzer.setup === true) {
                 cont.visible = false;
                 board.visible = true;
                 let i = 0;
-                rectangle.set_board(funcs.get_fen());
+                analyzer.set_board(funcs.get_fen());
                 rectangle1.focus = true;
                 cp.visible = true;
                 best_move.visible = true;

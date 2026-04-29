@@ -570,6 +570,8 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         close(pipe_to_engine[1]);
         close(pipe_from_engine[0]);
 
+        cout << engine_path << endl;
+
         // Execute the engine
         execlp(engine_path.c_str(), engine_path.c_str(), nullptr);
 

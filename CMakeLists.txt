@@ -26,6 +26,7 @@ if (UNIX AND NOT APPLE)
 endif()
 
 if (LINUX)
+  message("Downloading Stockfish...")
   FetchContent_Declare(
     stockfish
     URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64-avx2.tar"
@@ -33,12 +34,14 @@ if (LINUX)
     DOWNLOAD_EXTRACT_TIMESTAMP TRUE
   )
 elseif(APPLE)
+  message("Downloading Stockfish...")
   FetchContent_Declare(
     stockfish
     URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-macos-m1-apple-silicon.tar"
     URL_HASH  "4d77c4aa3ad9bd1ea8111f2ac5a4620fe7ebf998d6893bf828d49ccd579c8cb0"
     )
 elseif(WIN32)
+  message("Downloading Stockfish...")
   FetchContent_Declare(
     stockfish
     URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-avx2.zip"
@@ -62,10 +65,7 @@ qt_standard_project_setup(REQUIRES 6.6)
 file(COPY ${CMAKE_CURRENT_BINARY_DIR}/_deps/stockfish-src/stockfish-ubuntu-x86-64-avx2/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/engines/stockfish)
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY ./qml/main.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
-file(COPY ./qml/menu.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
-file(COPY ./qml/analyzer.qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/qml)
-
+file(COPY ./qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -84,7 +84,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
-    qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES qml/main.qml qml/menu.qml qml/analyzer.qml
+    qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 QML_FILES qml/main.qml qml/analyzer.qml qml/config_analyzer.qml qml/config_game.qml qml/config_engine.qml
     SOURCES include/qmlfuncs.h src/qmlfuncs.cpp
     )
     # Define target properties for Android with Qt 6 as:
@@ -105,7 +105,7 @@ else()
     endif()
 endif()
 target_include_directories(Chess-Mastermind PRIVATE include)
-target_link_libraries(Chess-Mastermind PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Gui Qt6::Quick Qt6::QuickControls2)
+target_link_libraries(Chess-Mastermind PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt6::Gui Qt6::Quick Qt6::QuickControls2 archive curl)
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
@@ -120,12 +120,6 @@ set_target_properties(Chess-Mastermind PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-include(GNUInstallDirs)
-install(TARGETS Chess-Mastermind
-    BUNDLE DESTINATION .
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
 
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(Chess-Mastermind)

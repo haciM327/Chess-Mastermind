@@ -3,169 +3,28 @@ import QtQuick.Controls 6.2
 import QtQuick.Window 6.2
 
 Rectangle {
-    id: menu
+    id: config_analyzer
     signal switchPage(string page)
     color: "#000000"
-    Button {
-        id: analyze
-        width: 132
-        height: 52
-        visible: true
-        Text {
-            id: analyzetext
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 9
-            color: "#000000"
-            text: "Analyze"
-        }
-        anchors.verticalCenter: parent.verticalCenter
-        icon.cache: false
-        display: AbstractButton.TextOnly
-        font.family: "Arial"
-        flat: false
-        highlighted: false
-        anchors.verticalCenterOffset: -72
-        anchors.horizontalCenterOffset: 0
-        checkable: true
-        anchors.horizontalCenter: parent.horizontalCenter
-        background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 40
-            color: "#e91e63"
-            border.color: "#000000"
-            border.width: 1
-            radius: 6
-        }
-        onClicked: {
-            label.text = qsTr("Select game depth and engine");
-            analyze.visible = false;
-            addGame.visible = false;
-            threadrect.visible = true;
-            gamelist.visible = true;
-            gamelist.model = funcs.getGames();
-            enginelist.visible = true;
-            enginelist.model = funcs.getEngines();
-            depthrect.visible = true;
-            depth.visible = true;
-            runanalyzer.visible = true;
-        }
-    }
-
     Text {
         id: label
         visible: true
         color: "#e91e63"
-        text: qsTr("Welcome to Chess Mastermind!")
-        anchors.top: analyze.bottom
-        anchors.topMargin: -230
+        text: qsTr("Configure the analyzer")
+        anchors.top: config_analyzer.top
+        anchors.topMargin: 104
         font.pointSize: 32
         font.family: "Arial"
         anchors.horizontalCenterOffset: 0
         anchors.horizontalCenter: parent.horizontalCenter
     }
-
-    Item {
-        id: __materialLibrary__
-    }
-
-    Button {
-        id: addGame
-        x: 574
-        y: 407
-        width: 132
-        height: 52
-        visible: true
-        Text {
-            id: addGametext
-            anchors.fill: parent
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            font.pointSize: 9
-            color: "#000000"
-            text: "Add Game"
-        }
-        background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 40
-            color: "#e91e63"
-            border.color: "#000000"
-            border.width: 1
-            radius: 6
-        }
-
-        onClicked: {
-            analyze.visible = false;
-            addGame.visible = false;
-            label.text = "Enter your game info";
-            pgnInput.visible = true;
-            textArea.visible = true;
-            add.visible = true;
-        }
-    }
-
-    TextArea {
-        id: pgnInput
-        x: 396
-        y: 204
-        width: 557
-        height: 312
-        visible: false
-        color: "#e91e63"
-        placeholderTextColor: "#e91e63"
-        font.family: "Arial"
-        placeholderText: qsTr("Paste PGN here")
-    }
-
-    TextArea {
-        id: textArea
-        x: 575
-        y: 539
-        width: 199
-        height: 52
-        visible: false
-        color: "#e91e63"
-        font.family: "Roboto"
-        placeholderTextColor: "#e91e63"
-        placeholderText: qsTr("Enter game name")
-    }
-
-    Button {
-        id: add
-        x: 618
-        y: 619
-        visible: false
-        text: qsTr("Add Game")
-        highlighted: false
-
-        background: Rectangle {
-            implicitWidth: 100
-            implicitHeight: 40
-            color: "#e91e63"
-            border.color: "#000000"
-            border.width: 1
-            radius: 6
-        }
-
-        onClicked: {
-            funcs.addGame(pgnInput.text, textArea.text);
-            analyze.visible = true;
-            addGame.visible = true;
-            label.text = "Welcome to Chess Mastermind";
-            pgnInput.visible = false;
-            textArea.visible = false;
-            add.visible = false;
-        }
-    }
-
     ComboBox {
         id: gamelist
         x: 289
         y: 340
         width: 137
         height: 40
-        visible: false
+        visible: true
         model: ["test", "moretest"]
         delegate: ItemDelegate {
             width: gamelist.width
@@ -204,6 +63,9 @@ Rectangle {
                 radius: 2
             }
         }
+        Component.onCompleted: {
+            gamelist.model = funcs.getGames();
+        }
     }
 
     ComboBox {
@@ -212,7 +74,7 @@ Rectangle {
         y: 340
         width: 137
         height: 40
-        visible: false
+        visible: true
         model: ["placeholder", "these should not be showing"]
         delegate: ItemDelegate {
             width: enginelist.width
@@ -251,10 +113,14 @@ Rectangle {
                 radius: 2
             }
         }
+        Component.onCompleted: {
+            enginelist.model = funcs.getEngines();
+        }
     }
+
     Rectangle {
         id: depthrect
-        visible: false
+        visible: true
         width: 165
         height: 25
         anchors.centerIn: parent
@@ -262,22 +128,22 @@ Rectangle {
         border.color: "#e91e63"
         border.width: 1
         color: "black"
-        TextInput {
+        TextArea {
             id: depth
-            y: 2.5
-            x: 2.5
             width: 160
+            anchors.centerIn: parent
             font.pointSize: 10
-            visible: false
+            visible: true
             color: "#e91e63"
-            text: "Enter a depth value (18)"
+            placeholderTextColor: "#e91e63"
+            placeholderText: "Enter depth (18)"
             selectByMouse: true
         }
     }
 
     Rectangle {
         id: threadrect
-        visible: false
+        visible: true
         width: 165
         height: 25
         anchors.centerIn: parent
@@ -285,15 +151,14 @@ Rectangle {
         border.color: "#e91e63"
         border.width: 1
         color: "black"
-        TextInput {
+        TextArea {
             id: threads
-            y: 2.5
-            x: 2.5
             width: 160
             font.pointSize: 10
             visible: true
             color: "#e91e63"
-            text: "How many threads? (1)"
+            placeholderTextColor: "#e91e63"
+            placeholderText: "How many threads? (1)"
             selectByMouse: true
         }
     }
@@ -305,7 +170,7 @@ Rectangle {
         x: 574
         y: 500
         text: "Analyze!"
-        visible: false
+        visible: true
         background: Rectangle {
             implicitWidth: 100
             implicitHeight: 40
@@ -325,8 +190,9 @@ Rectangle {
             progressBarFill.visible = true;
             progressBarFill.width = 0;
             percent.visible = true;
-            //switchPage("analyzer.qml")
             funcs.runAnalyzer("./games/" + gamelist.currentValue, "./engines/" + enginelist.currentValue, depth.text, threads.text);
         }
     }
+
+
 }

@@ -10,7 +10,7 @@ Window {
     color: "#000000"
     visible: true
 
-    property string currentQmlFile: "menu.qml"
+    property string currentQmlFile: "title.qml"
 
     function switchToPage(page) {
         currentQmlFile = page;
@@ -30,8 +30,13 @@ Window {
             percent.text = "100%"
             progressBarFill.width = progressBarOutline.width;
             switchToPage("analyzer.qml")
+        }
 
-
+        function finished_download() {
+            switchToPage("title.qml");
+            progressBarFill.visible = false;
+            progressBarOutline.visible = false;
+            percent.visible = false;
         }
     }
 
@@ -78,5 +83,8 @@ Window {
         text: "0%"
         color: "#000000"
         font.pointSize: 10
+        onVisibleChanged: {
+            percent.text = "0%"
+        }
     }
 }

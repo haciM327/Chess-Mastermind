@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QQmlEngine>
 #include "../include/analyzer.hpp"
+#include <curl/curl.h>
 
 class Qmlfuncs : public QObject
 {
@@ -17,9 +18,17 @@ public:
 
     Q_INVOKABLE QList<QString> getGames();
 
+    Q_INVOKABLE void download(QString url, QString name, QString type);
+
+    void move_engine(QString name, std::string type);
+
+    static int progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlnow,curl_off_t ultotal,curl_off_t ulnow);
+
     Q_INVOKABLE QList<QString> getEngines();
 
     Q_INVOKABLE QString getos();
+
+    Q_INVOKABLE QString getarch();
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth, QString threads);
 
@@ -40,6 +49,13 @@ public:
     all_data data;
 
     int current_move = 0;
+
+    struct progress {
+        curl_off_t bytesDownloaded;
+        curl_off_t totalSize;
+
+        progress() : bytesDownloaded(0), totalSize(0) {}
+    };
 
 signals:
 };

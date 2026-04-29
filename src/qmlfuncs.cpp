@@ -22,7 +22,14 @@
 #include <dirent.h>
 #include <iostream>
 #include <string>
+#include <filesystem>
+#include <curl/curl.h>
 #include <QtConcurrent/QtConcurrent>
+#include <QMetaObject>
+#include <cctype>
+//#include <QVariant>
+#include <archive.h>
+#include <archive_entry.h>
 #include "../include/analyzer.hpp"
 #include "../include/funcs.hpp"
 #ifdef _WIN32
@@ -35,6 +42,7 @@
 #endif
 
 using namespace std;
+namespace fs = std::filesystem;
 
 Qmlfuncs::Qmlfuncs(QObject *parent)
     : QObject{parent}
@@ -57,6 +65,135 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 
     outfile.close();
 
+}
+
+void Qmlfuncs::download(QString url, QString name, QString type) {
+    QtConcurrent::run([this, url, name, type]{
+        // Initializes curl
+        if (curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
+            std::cerr << "Error initializing libcurl." << std::endl;
+        }
+
+        // Initializes variables
+        CURL *curl = curl_easy_init();
+        progress Downloadprogress;
+        CURLcode res;
+        FILE *file;
+
+        if (!curl) {
+            std::cerr << "Error initializing curl." << std::endl;
+            return;
+        }
+
+        curl_easy_setopt(curl, CURLOPT_URL, url.toStdString().c_str());
+        curl_easy_setopt(curl, CURLOPT_XFERINFODATA, &Downloadprogress);
+        curl_easy_setopt(curl, CURLOPT_XFERINFOFUNCTION, progress_callback);
+        curl_easy_setopt(curl, CURLOPT_NOPROGRESS, 0L); // Enable progress data
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
+
+        // Open file hanndle for writing
+        file = fopen("stockfish.tar", "wb");
+        if (!file) {
+            std::cerr << "Error opening file for writing" << std::endl;
+            curl_easy_cleanup(curl);
+            return;
+        }
+
+        // Set file as the target for the download
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, file);
+
+        // Perform the request
+        res = curl_easy_perform(curl);
+
+        // Check for errors
+        if (res != CURLE_OK) {
+            std::cerr << "\ncurl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
+            return;
+        } else {
+            std::cout << "\nDownload completed successfully!" << std::endl;
+        }
+
+        move_engine(name, type.toStdString());
+    });
+}
+
+void Qmlfuncs::move_engine(QString name, std::string type) {
+    struct archive* a = archive_read_new();
+       archive_read_support_format_all(a);
+       archive_read_support_filter_all(a);
+
+       if (archive_read_open_filename(a, "stockfish.tar", 10240) != ARCHIVE_OK) {
+           std::cerr << archive_error_string(a) << "\n";
+           return;
+       }
+
+       struct archive_entry* entry;
+       int found = 0;
+
+       std::transform(type.begin(), type.end(), type.begin(),
+           [](unsigned char c){ return std::tolower(c); });
+       std::string path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type ;
+       if (getos() == "windows") {path += ".exe";}
+       while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
+           std::string current = archive_entry_pathname(entry);
+           std::cout << "Entry: [" << current << "]\n";
+
+           if (current == path) {
+               found = 1;
+
+               std::ofstream file("./engines/" + name.toStdString(), std::ios::binary);
+               cout << name.toStdString() << endl;
+               if (!file) {
+                   std::cerr << "Failed to open output file\n";
+                   if (!QMetaObject::invokeMethod(qfuncs, "finished_download", Qt::QueuedConnection)) {
+                       log("Failed to call loading screen method\n");
+                       }
+                   return;
+               }
+
+               const void* buff;
+               size_t size;
+               la_int64_t offset;
+
+               while (true) {
+                   int r = archive_read_data_block(a, &buff, &size, &offset);
+                   if (r == ARCHIVE_EOF)
+                       break;
+                   if (r != ARCHIVE_OK) {
+                       std::cerr << archive_error_string(a) << "\n";
+                       return;
+                   }
+                   file.write(static_cast<const char*>(buff), size);
+               }
+
+               file.close();
+               break; // stop after finding the file
+           } else {
+               archive_read_data_skip(a);
+           }
+       }
+
+       archive_read_free(a);
+
+       if (!found) {
+           std::cerr << "File not found in archive\n";
+           return;
+       }
+
+       string command = std::string("chmod 755 ./engines/") + name.toStdString();
+       system(command.c_str());
+       if (!QMetaObject::invokeMethod(qfuncs, "finished_download", Qt::QueuedConnection)) {
+           log("Failed to call loading screen method\n");
+           }
+       return;
+}
+
+int Qmlfuncs::progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlnow,curl_off_t ultotal,curl_off_t ulnow) {
+        double percent = (dltotal > 0) ? (dlnow * 100.0 / dltotal) : 0.0;
+        if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, percent))) {
+            log("Failed to call loading screen method\n");
+        }
+        return 0;
 }
 
 QList<QString> Qmlfuncs::getGames() {
@@ -90,8 +227,19 @@ QList<QString> Qmlfuncs::getEngines() {
 QString Qmlfuncs::getos() {
     #ifdef _WIN32
         return "windows";
-    #else
-        return "other";
+    #elif __APPLE__ || __MACH
+        return "macos";
+    #elif __linux__
+        // ubuntu for stockfish downloads used in config_engine.qml
+        return "ubuntu";
+    #endif
+}
+
+QString Qmlfuncs::getarch() {
+    #if defined(__aarch64__)
+        return "apple-silicon";
+    #elif defined(__x86_64__)
+        return "x86-64";
     #endif
 }
 
