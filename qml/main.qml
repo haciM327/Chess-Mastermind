@@ -23,13 +23,12 @@ Window {
         function reportProgress(progress: int) {
             percent.text = progress.toString() + '%';
             progressBarFill.width = progressBarOutline.width * (parseInt(percent.text.split('%')[0]) / 100);
-
         }
 
         function finished() {
-            percent.text = "100%"
+            percent.text = "100%";
             progressBarFill.width = progressBarOutline.width;
-            switchToPage("analyzer.qml")
+            switchToPage("analyzer.qml");
         }
 
         function finished_download() {
@@ -40,19 +39,18 @@ Window {
         }
     }
 
-        Loader {
-                id: loader
-                source: rectangle.currentQmlFile
-                anchors.fill: parent
-            }
+    Loader {
+        id: loader
+        source: rectangle.currentQmlFile
+        anchors.fill: parent
+    }
 
-            Connections {
-                target: loader.item
-                function onSwitchPage(page) {
-                    switchToPage(page);
-                }
-            }
-
+    Connections {
+        target: loader.item
+        function onSwitchPage(page) {
+            switchToPage(page);
+        }
+    }
 
     Rectangle {
         id: progressBarOutline
@@ -84,7 +82,11 @@ Window {
         color: "#000000"
         font.pointSize: 10
         onVisibleChanged: {
-            percent.text = "0%"
+            percent.text = "0%";
         }
+    }
+
+    onClosing: function (close) {
+        funcs.app_quit();
     }
 }

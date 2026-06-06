@@ -32,6 +32,7 @@
 #include <archive_entry.h>
 #include "../include/analyzer.hpp"
 #include "../include/funcs.hpp"
+#include <QThread>
 #ifdef _WIN32
     #include <windows.h>
     #include <tchar.h>
@@ -54,7 +55,7 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 void Qmlfuncs::addGame(QString pgn, QString name) {
 
 #ifdef _WIN32
-    std::string path = ".\\analyzer\\games\\";
+    std::string path = ".\\games\\";
 #else
     std::string path = "./games/";
 #endif
@@ -132,7 +133,7 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
 
        std::transform(type.begin(), type.end(), type.begin(),
            [](unsigned char c){ return std::tolower(c); });
-       std::string path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type ;
+       std::string path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type;
        if (getos() == "windows") {path += ".exe";}
        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
            std::string current = archive_entry_pathname(entry);
@@ -241,33 +242,43 @@ QString Qmlfuncs::getarch() {
     #elif defined(__x86_64__)
         return "x86-64";
     #endif
+
+    return "unknown";
 }
 
 void Qmlfuncs::runAnalyzer(QString game, QString engine, QString depth, QString threads) {
-    QtConcurrent::run([this, game, engine, depth, threads]{
-        int thread_num;
-        int depth_num;
-
-        // Checks thread to depth to ensure inputted value is an int
-        // Defaults to 1 or 18 otherwise
-        if (threads.toInt() == 0) {
-            log("Thread count must be an integer greater than 0. Defaulting to 1.\n");
-            thread_num = 1;
-        } else {
+    int thread_num, depth_num;
+    if (threads.toInt() == 0) {
+        log("Thread count must be an integer greater than 0. Defaulting to 1.\n");
+        thread_num = 1;
+    } else {
             thread_num = threads.toInt();
-        }
+    }
 
-        if (depth.toInt() == 0) {
-            log("Depth count must be an integer greater than 0. Defaulting to 18.\n");
-            depth_num = 18;
-        } else {
-            depth_num = depth.toInt();
-        }
+    if (depth.toInt() == 0) {
+        log("Depth count must be an integer greater than 0. Defaulting to 18.\n");
+        depth_num = 18;
+    } else {
+        depth_num = depth.toInt();
+    }
 
-        // Runs the analyzer in the seperate thread created by QtConcurrent
-        // This ensures the loading screen and progress bar can be updated without stalling the application
-        this->data = setup_pipe(engine.toStdString(), depth_num, game.toStdString(), thread_num);
-    });
+    QThread *thread = new QThread;
+
+    // Runs the analyzer in the seperate thread
+    // This ensures the loading screen and progress bar can be updated without stalling the application
+    ana = new Analyzer(engine.toStdString(), depth_num, game.toStdString(), thread_num);
+    ana->moveToThread(thread);
+    connect(thread, &QThread::started, ana, &Analyzer::setup_pipes);
+    connect(this, &Qmlfuncs::app_quit, ana, &Analyzer::quit);
+    QObject::connect(ana, &Analyzer::finished, this, &Qmlfuncs::analyzer_finished, Qt::DirectConnection);
+    connect(ana, &Analyzer::finished, thread, &QThread::quit);
+    connect(ana, &Analyzer::finished, ana, &Analyzer::deleteLater);
+    connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+    thread->start();
+}
+
+void Qmlfuncs::analyzer_finished() {
+    this->data = ana->data;
 }
 
 QString Qmlfuncs::get_fen() {

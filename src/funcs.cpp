@@ -25,10 +25,12 @@ using namespace std;
 int open_file() {
     ofstream log_file("logfile.txt");
 
-    if (!log_file) {return 1;}
-
+   if (!log_file) {
+        return 1;
+    }
     log_file << "";
     log_file.close();
+    return 0;
 }
 
 // Logs output to both cout and log file

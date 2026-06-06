@@ -26,14 +26,17 @@
     }
 #else
     #include <sys/select.h>
+    #define _OPEN_SYS
+    #include <signal.h>
+    #include <unistd.h>
 #endif
 
 #include <cstddef>
 #include <cstdlib>
 #include <iostream>
-#include <QtCore/qobject.h>
+#include <QtCore/QObject>
 #include <cstdio>
-#include <unistd.h>
+
 #include <vector>
 #include <string.h>
 #include <cstring>
@@ -54,16 +57,17 @@ using namespace chess;
 
 QPointer<QObject> qfuncs;
 
-struct values {
-    int queen;
-    int rook;
-    int bishop;
-    int knight;
-    int pawn;
-};
+
+Analyzer::Analyzer(const std::string& _engine_path, int _depth, const std::string& _game_path, int _threads) {
+
+    depth = _depth;
+    threads = _threads;
+    engine_path = _engine_path;
+    game_path = _game_path;
+}
 
 // Function to communicate with engine
-all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads) {
+void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads) {
 
     #ifdef _WIN32
         FILE* read_pipe = _fdopen(read_fd, "r");
@@ -75,7 +79,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
     if (!read_pipe || !write_pipe) {
         std::cerr << "Failed to open pipes." << endl;
-        return {};
+        return;
     }
 
     // Send the UCI command to engine
@@ -96,9 +100,9 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
     // Setup some things needed for the game review
     std::string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-    game_data data = read_pgn(game_path);
+    game_data _data = read_pgn(game_path);
 
-    // Defines eval varaibales responsible for keeping track of centipawn score
+    // Defines eval variables responsible for keeping track of centipawn score
     int last_eval = 0;
     int eval = 0;
     int second_best_eval = 0;
@@ -157,7 +161,6 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
             break;
         }
     }
-
     // Interprets the engine's response and keeps necessary information
     std::string first_best_move;
     std::string second_best_move;
@@ -189,13 +192,15 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
     // Tracks progress through the move list
     double counter = -1;
+    
+    std::string new_fen = board.getFen();
 
     // Loops through the moves in the game
-    for (auto& qStrmove : data.moves) {
+    for (auto& qStrmove : _data.moves) {
         // Updates counter
         counter = counter + 1;
         // Updates the progress bar
-        if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, (counter/(data.moves.size())*100)))) {
+        if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, (counter/(_data.moves.size())*100)))) {
             log("Failed to call loading screen method\n");
         }
 
@@ -209,7 +214,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         // Brilliant, Great, Best, Excellent, Good, Innacurate, Mistake, Blunder
         std::string move_type;
 
-        // Updates the fen with the next move
+        // Updates the board with the previous move
         board.setFen(fen);
 
         // parseSan function doesn't work with castling so we manually convert to Uci and then put it through uci::uciToMove
@@ -248,8 +253,9 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         }
 
         // Gets the new fen for move type calculations
-        std::string new_fen = board.getFen();
+        new_fen = board.getFen();
 
+        
         // Updates the position in the engine
         // This returns no output
         fprintf(write_pipe, "position fen %s\n", new_fen.c_str());
@@ -279,13 +285,11 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
                 break;
             }
         }
-
         // Store the integer centipawn values of the best and second best possible evaluations
         eval = atoi(lines[lines.size() - 3].substr(lines[lines.size() - 3].find("cp") + 2, 5).c_str());
         second_best_eval = atoi(lines[lines.size() - 2].substr(lines[lines.size() - 2].find("cp") + 2, 2).c_str());
         pv1 = lines[lines.size() - 3];
         pv2 = lines[lines.size() - 2];
-
         // Creates a lookup table for piece values
         values piece_values = {9, 5, 3, 3, 1};
 
@@ -309,7 +313,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
         // Brilliant Moves are Best moves that sacrifice a piece
         if (move == first_best_move) {
             // Pulls the move_to square from the full move
-            std::string move_to = move.substr(2, 2);
+            /*std::string move_to = move.substr(2, 2);
 
             // Gets a number of all attackers to the square
             vector<int> attackers = get_attackers(fen, move_to, board);
@@ -331,7 +335,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
                     second_best_move = "forced";
                 }
                 continue;
-            }
+            }*/
 
             // Checks if the move was forced
             // If so nothing else is needed so we return
@@ -397,7 +401,7 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
 
         // The rest of the checks are straightforward and just check the eval change minus the best eval change and compare it to the right numbers
         int relative_eval_change = abs(best_eval_change - eval_change);
-        log("REC: " + to_string(relative_eval_change) + "\n");
+
         if (relative_eval_change < 30) {
             move_type = "Excellent Move";
             fen = new_fen;
@@ -490,10 +494,19 @@ all_data analyze(int read_fd, int write_fd, const std::string& engine_path, int 
     // Send finished signal to QML app
     QMetaObject::invokeMethod(qfuncs, "finished", Qt::QueuedConnection);
 
-    return {info_list, data};
+    data = {info_list, _data};
+    emit finished();
 }
 
-all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path, int threads) {
+void Analyzer::quit() {
+    #ifdef _WIN32
+        TerminateProcess(pi.hProcess, 0);
+    #else
+        kill(pid, SIGTERM);
+    #endif
+}
+
+void Analyzer::setup_pipes() {
 
     #ifdef _WIN32
         HANDLE hChildStd_IN_Rd, hChildStd_IN_Wr;
@@ -513,7 +526,6 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         SetHandleInformation(hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0);
         SetHandleInformation(hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0);
 
-        PROCESS_INFORMATION pi;
         STARTUPINFOA si = { sizeof(STARTUPINFO) };
         si.dwFlags |= STARTF_USESTDHANDLES;
         si.hStdInput = hChildStd_IN_Rd;
@@ -524,7 +536,7 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         char cmdline_cstr[1024];
         strcpy_s(cmdline_cstr, cmdline.c_str());
 
-        if (!CreateProcessA(NULL, cmdline_cstr, NULL, NULL, TRUE, 0, NULL, NULL, &si, &pi)) {
+        if (!CreateProcessA(NULL, cmdline_cstr, NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &this->pi)) {
             cerr << "Failed to create process: " << GetLastError() << endl;
         }
 
@@ -536,63 +548,57 @@ all_data setup_pipe(const std::string& engine_path, int depth, const std::string
         int read_fd = _open_osfhandle((intptr_t)hChildStd_OUT_Rd, _O_RDONLY);
         int write_fd = _open_osfhandle((intptr_t)hChildStd_IN_Wr, _O_WRONLY);
 
-        all_data data = analyze(read_fd, write_fd, engine_path, depth, game_path, threads);
+        analyze(read_fd, write_fd, engine_path, depth, game_path, threads);
 
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
+        CloseHandle(this->pi.hProcess);
+        CloseHandle(this->pi.hThread);
         CloseHandle(hChildStd_IN_Wr);
         CloseHandle(hChildStd_OUT_Rd);
 
-        return data;
     #else
 
-    int pipe_to_engine[2];
-    int pipe_from_engine[2];
+        int pipe_to_engine[2];
+        int pipe_from_engine[2];
 
-    if (pipe(pipe_to_engine) == -1 || pipe(pipe_from_engine) == -1) {
-        cerr << "Failed to create pipes." << endl;
-    }
+        if (pipe(pipe_to_engine) == -1 || pipe(pipe_from_engine) == -1) {
+            cerr << "Failed to create pipes." << endl;
+        }
 
-    pid_t pid = fork();
-    if (pid == -1) {
-        cerr << "Failed to fork." << endl;
-    }
+        pid = fork();
+        if (pid == -1) {
+            cerr << "Failed to fork." << endl;
+        }
 
-    // Creates a varaible to hold all data
-    all_data data;
+        if (pid == 0) {  // Child process
+            // Redirect stdin and stdout to the pipes
+            dup2(pipe_to_engine[0], STDIN_FILENO);
+            dup2(pipe_from_engine[1], STDOUT_FILENO);
 
-    if (pid == 0) {  // Child process
-        // Redirect stdin and stdout to the pipes
-        dup2(pipe_to_engine[0], STDIN_FILENO);
-        dup2(pipe_from_engine[1], STDOUT_FILENO);
+            // Close unused pipe ends
+            close(pipe_to_engine[1]);
+            close(pipe_from_engine[0]);
 
-        // Close unused pipe ends
-        close(pipe_to_engine[1]);
-        close(pipe_from_engine[0]);
+            // Execute the engine
+            execlp(engine_path.c_str(), engine_path.c_str(), nullptr);
 
-        cout << engine_path << endl;
+            // If execlp fails
+            cerr << "Failed to execute the engine." << endl;
+        } else {  // Parent process
+            // Close unused pipe ends
+            close(pipe_to_engine[0]);
+            close(pipe_from_engine[1]);
 
-        // Execute the engine
-        execlp(engine_path.c_str(), engine_path.c_str(), nullptr);
+            analyze(pipe_from_engine[0], pipe_to_engine[1], engine_path, depth, game_path, threads);
 
-        // If execlp fails
-        cerr << "Failed to execute the engine." << endl;
-    } else {  // Parent process
-        // Close unused pipe ends
-        close(pipe_to_engine[0]);
-        close(pipe_from_engine[1]);
-
-        data = analyze(pipe_from_engine[0], pipe_to_engine[1], engine_path, depth, game_path, threads);
-
-        // Close remaining pipe ends
-        close(pipe_to_engine[1]);
-        close(pipe_from_engine[0]);
-    }
-    return data;
+            // Close remaining pipe ends
+            close(pipe_to_engine[1]);
+            close(pipe_from_engine[0]);
+        }
     #endif
+
 }
 
-game_data read_pgn(const std::string& f) {
+game_data Analyzer::read_pgn(const std::string& f) {
     // Opens the pgn file
     ifstream file(f);
 
@@ -612,7 +618,7 @@ game_data read_pgn(const std::string& f) {
 }
 
 
-vector<int> get_attackers(string fen, std::string targetSquare_string, Board &board) {
+vector<int> Analyzer::get_attackers(string fen, std::string targetSquare_string, Board &board) {
     // Converts the target square to a square object
     chess::Square targetSquare = chess::Square(targetSquare_string);
 

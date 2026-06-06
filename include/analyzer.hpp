@@ -9,9 +9,14 @@
 #include <QStringList>
 #include <QMetaType>
 #include <QObject>
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+    #include <signal.h>
+    #include <sys/wait.h>
+#endif
 
-
-// Structures
 struct game_data {
     Q_GADGET
 
@@ -38,8 +43,6 @@ struct game_data {
 
 Q_DECLARE_METATYPE(game_data)
 
-
-
 struct move_data {
     Q_GADGET
 
@@ -58,28 +61,57 @@ struct move_data {
 
 };
 
-Q_DECLARE_METATYPE(move_data)
-
-
-struct values;
-
+struct values {
+    int queen;
+    int rook;
+    int bishop;
+    int knight;
+    int pawn;
+};
 
 struct all_data {
     std::vector<move_data> info_list;
     game_data headers;
 };
 
+Q_DECLARE_METATYPE(move_data)
+
+class Analyzer : public QObject {
+
+    Q_OBJECT
+
+    public:
+        Analyzer(const std::string& engine_path, int depth, const std::string& game_path, int threads);
+        all_data data;
+        #ifdef _WIN32
+            PROCESS_INFORMATION pi;
+        #else
+            pid_t pid;
+        #endif
+
+        void setup_pipes();
+
+        void quit();
+
+    private:
+        int depth, threads;
+        std::string engine_path, game_path;
+
+        // Functions
+        std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
+        void analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads);
+
+        game_data read_pgn(const std::string& f);
+        std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
+
+    signals:
+        void finished();
 
 
-// Functions
-std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
-all_data analyze(FILE* &read_pipe, FILE* &write_pipe, const std::string& engine_path, int depth, const std::string& game_path, int threads);
-all_data setup_pipe(const std::string& engine_path, int depth, const std::string& game_path, int threads);
-game_data read_pgn(const std::string& f);
-std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
+};
 
 
-// Classes
+
 class PGNParser : public chess::pgn::Visitor {
     public:
         game_data game;
@@ -92,5 +124,5 @@ class PGNParser : public chess::pgn::Visitor {
 };
 
 
-extern QPointer<QObject> qfuncs;
+    extern QPointer<QObject> qfuncs;
 #endif

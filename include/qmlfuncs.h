@@ -32,6 +32,8 @@ public:
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth, QString threads);
 
+
+
     Q_INVOKABLE QString get_fen();
 
     Q_INVOKABLE move_data move_ahead();
@@ -57,7 +59,14 @@ public:
         progress() : bytesDownloaded(0), totalSize(0) {}
     };
 
+private:
+    Analyzer *ana;
+
 signals:
+    void app_quit();
+
+public slots:
+    void analyzer_finished();
 };
 
 #endif // QMLFUNCS_H

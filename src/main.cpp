@@ -16,9 +16,9 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <QGuiApplication>
+#include <QtGui/QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QQuickStyle>
+#include <QtQuickControls2/QQuickStyle>
 #include <QQmlContext>
 #include <dirent.h>
 #include <QObject>
