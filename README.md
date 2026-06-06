@@ -12,7 +12,7 @@ To compile from source you will need some packages like cmake, qt6, qt6-widgets,
 
 Install prerequisites
 ```
-sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev libcurl14 libarchive-dev
+sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev libcurl4-openssl-dev libarchive-dev
 ```
 
 ### Fedora based Linux
@@ -41,8 +41,12 @@ sudo dnf install git cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qt
 
    ```cmake ..```
 
-5. Build the files
+   On some distributions you may get a series of warnings saying that certain qml plugins cannot be found and will not be linked. It is safe to ignore these.
+
+6. Build the files
 
    ```make -j${nproc}```
+   
+   The ```-j${nproc}``` tells the computer to use the maximum number of threads available. You can omit this or instead of ```${nproc}``` you can specify a number of threads to use.
 
-6. All done! you have now build the project and can run it whenever.
+8. All done! you have now build the project and can run it whenever.
