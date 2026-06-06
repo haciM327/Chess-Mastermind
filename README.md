@@ -12,7 +12,7 @@ To compile from source you will need some packages like cmake, qt6, qt6-widgets,
 
 Install prerequisites
 ```
-sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev
+sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev libcurl14 libarchive-dev
 ```
 
 ### Fedora based Linux
@@ -20,7 +20,7 @@ sudo apt-get install git cmake build-essential qt6-base-dev qt6-declarative-dev
 To install the prerequisites you will need to have root access and follow the steps below:
 ```
 sudo dnf update
-sudo dnf install cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel git
+sudo dnf install git cmake make gcc gcc-c++ kernel-devel qt6-qtbase-devel qt6-qtdeclarative-devel libcurl-devel libarchive-devel
 ```
 
 ## Compiling
