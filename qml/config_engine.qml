@@ -6,8 +6,8 @@ Rectangle {
     id: config_engine
     signal switchPage(string page)
     color: "#000000"
-    property string os;
-    property string arch;
+    property string os
+    property string arch
     Text {
         id: label
         visible: true
@@ -37,12 +37,17 @@ Rectangle {
             radius: 6
         }
         onClicked: {
-            if (config_engine.os == "windows") {funcs.download("https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-" + config_engine.arch + "-" + typeList.currentValue + ".zip", engineName.text, typeList.currentValue)}
-            else {funcs.download("https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-" + config_engine.os + "-" + config_engine.arch + "-" + typeList.currentValue + ".tar", engineName.text, typeList.currentValue)}
+            if (config_engine.os == "windows") {
+                funcs.download("https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-" + config_engine.arch + "-" + typeList.currentValue + ".zip", engineName.text, typeList.currentValue);
+            } else if (!typeList.currentValue === "64-Bit") {
+                funcs.download("https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-" + config_engine.os + "-" + config_engine.arch + "-" + typeList.currentValue + ".tar", engineName.text, typeList.currentValue);
+            } else {
+                funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_18/stockfish-ubuntu-x86-64.tar", engineName.text, typeList.currentValue);
+            }
             label.text = "Downloading";
             typeList.visible = false;
             download.visible = false;
-            engineName.visible = false
+            engineName.visible = false;
             progressBarFill.visible = true;
             progressBarOutline.visible = true;
             percent.visible = true;
@@ -96,16 +101,16 @@ Rectangle {
         }
 
         Component.onCompleted: {
-            config_engine.os = funcs.getos()
-            config_engine.arch = funcs.getarch()
+            config_engine.os = funcs.getos();
+            config_engine.arch = funcs.getarch();
 
             if (config_engine.os == "windows" || config_engine.os == "linux") {
-                typeList.model = models[0]
+                typeList.model = models[0];
             } else { // has to be macos
                 if (config_engine.arch == "apple-silicon") {
-                    typeList.model = models[2]
+                    typeList.model = models[2];
                 } else { // has to be intel mac
-                    typeList.model = models[3]
+                    typeList.model = models[3];
                 }
             }
         }
@@ -132,6 +137,4 @@ Rectangle {
             border.color: "#e91e63"
         }
     }
-
-
 }

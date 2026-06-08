@@ -133,8 +133,16 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
 
        std::transform(type.begin(), type.end(), type.begin(),
            [](unsigned char c){ return std::tolower(c); });
-       std::string path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type;
-       if (getos() == "windows") {path += ".exe";}
+       std::string path;
+       cout << type;
+       if (type != "64-bit") {
+           path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type;
+       } else {
+           path = "stockfish/stockfish-ubuntu-x86-64";
+       }
+
+
+       if (getos() == "windows") path += ".exe";
        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
            std::string current = archive_entry_pathname(entry);
            std::cout << "Entry: [" << current << "]\n";
