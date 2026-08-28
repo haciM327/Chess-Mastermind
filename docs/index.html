@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chess Mastermind Wiki</title>
+        <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body style="css/main.css">
+        <h1>Welcome to the Chess Mastermind Wiki</h1>
+        <h2>Getting Started</h2>
+        <p>Chess Mastermind is a tool designed to help you get better at chess. To get started follow the installation guide <a href=https://github.com/haciM327/Chess-Mastermind/blob/main/README.md>here</a>.</p>
+        <p>Once the app is installed, you'll need a game to analyze and study. Either use the provided example or go play a game!</p>
+        <p>Open the app. You will see three options. One is to add a game, another will add an engine, and the third will be for the actual studying.</p>
+        <p>Lets starts with adding your game. You'll be needing the PGN which can be exported from most chess sites. Paste it into the box and then choose a name for your game. It is common practice to end your game name with ".pgn" but this is entirely optional.</p>
+        <p>Next lets go to the add engine screen. While Chess Mastermind does come with a version of the Stockfish engine, this place will let you choose from other engines (currently only versions of Stockfish). Not all computers can use all the engines provided. It is up to you to know if your CPU supports certain instuctions sets like AVX2 or BMI2. If unsure, go ahead and download the generic x86-64.</p>
+        <p>Now it is time to actually study your game. Click analyze and you'll be taken to a screen with many options.</p>
+        <ol>
+            <li>The first is your game selector. Select the game that you named earlier.</li>
+            <li>The next is your engine selection on the right side of the screen. You'll most likely want the engine you downloaded earlier. Select it now.</li>
+            <li>The first option in the middle is for your depth. This is a number that indicated how accurate the engine will be. The default is 18. Keep in mind a higher number will result in a greater accuracy but also a significantly longer loading time later. If unsure leave it blank for the default of 18</li>
+            <li>Finally, the thread number indicates how many threads your CPU will use to analyze your game. The default is 1. The higher the number the faster your analysis will go but also the more resources your computer will use. WARNING: SETTING THIS SETTING TOO HIGH CAN RESULT IN OVERHEATING AND DAMAGE TO YOUR COMPUTER. IF UNSURE KEEP THIS SETTING BLANK.</li>
+            <li>You can now analyze your game. Your computer will start analyzing your game. Depending on the speed of your computer and the settings you inputted this can take anywhere from a few seconds to several hours. Please be patient.</li>
+        </ol>
+        <p>Once it is done you will have a continue button appear. Hit that and then use the arrow keys to see the moves and how good the engine thought each one was.</p>
+        <p>Enjoy</p>
+    </body>
+</html>
