@@ -32,41 +32,6 @@ if (UNIX AND NOT APPLE)
 
 endif()
 
-if (LINUX)
-  message("Downloading Stockfish...")
-  FetchContent_Declare(
-    stockfish
-    URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64-avx2.tar"
-    URL_HASH  "SHA256=536c0c2c0cf06450df0bfb5e876ef0d3119950703a8f143627f990c7b5417964"
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
-  set(stockfish "stockfish-ubuntu-x86-64-avx2")
-elseif(APPLE)
-  message("Downloading Stockfish...")
-  FetchContent_Declare(
-    stockfish
-    URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-macos-m1-apple-silicon.tar"
-    URL_HASH  "4d77c4aa3ad9bd1ea8111f2ac5a4620fe7ebf998d6893bf828d49ccd579c8cb0"
-    )
-  set(stockfish "stockfish-macos-m1-apple-silicon")
-elseif(WIN32)
-  message("Downloading Stockfish...")
-  FetchContent_Declare(
-    stockfish
-    URL_HASH_SHA256  "6f6c272ebd6ea594377715235c8a7326f75940ef4f4f856f45106028fe6ae900"
-    URL "https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-avx2.zip"
-    )
-  set(stockfish "stockfish-windows-x86-64-avx2.exe")
-else()
-  set(stockfish_found FALSE)
-  message("A compatible engine could not be found.")
-endif()
-
-if (stockfish_found)
-  FetchContent_MakeAvailable(stockfish)
-endif()
-
-
 find_package(Qt6 REQUIRED COMPONENTS
     Widgets
     Gui
@@ -77,11 +42,6 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 qt_standard_project_setup(REQUIRES 6.6)
 
-if (WIN32)
-  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/_deps/stockfish-src/${stockfish} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/engines)
-else()
-  file(COPY ${CMAKE_CURRENT_BINARY_DIR}/_deps/stockfish-src/${stockfish}/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/engines/stockfish)
-endif()
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

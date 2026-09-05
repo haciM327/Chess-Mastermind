@@ -18,9 +18,9 @@ public:
 
     Q_INVOKABLE QList<QString> getGames();
 
-    Q_INVOKABLE void download(QString url, QString name, QString type);
+    Q_INVOKABLE void download(QString url, QString name);
 
-    void move_engine(QString name, std::string type);
+    void move_engine(QString name);
 
     static int progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlnow,curl_off_t ultotal,curl_off_t ulnow);
 

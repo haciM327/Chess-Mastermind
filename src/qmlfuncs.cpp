@@ -73,8 +73,8 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 
 }
 
-void Qmlfuncs::download(QString url, QString name, QString type) {
-    QtConcurrent::run([this, url, name, type]{
+void Qmlfuncs::download(QString url, QString name) {
+    QtConcurrent::run([this, url, name]{
         // Initializes curl
         if (curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
             std::cerr << "Error initializing libcurl." << std::endl;
@@ -119,11 +119,11 @@ void Qmlfuncs::download(QString url, QString name, QString type) {
             std::cout << "\nDownload completed successfully!" << std::endl;
         }
 
-        move_engine(name, type.toStdString());
+        move_engine(name);
     });
 }
 
-void Qmlfuncs::move_engine(QString name, std::string type) {
+void Qmlfuncs::move_engine(QString name) {
     struct archive* a = archive_read_new();
        archive_read_support_format_all(a);
        archive_read_support_filter_all(a);
@@ -136,21 +136,14 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
        struct archive_entry* entry;
        int found = 0;
 
-       std::transform(type.begin(), type.end(), type.begin(),
-           [](unsigned char c){ return std::tolower(c); });
        std::string path;
-       cout << "type: " << type << endl;
-       if (type != "64-bit") {
-           path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type;
-       } else {
-#ifdef __linux__
-           path = "stockfish/stockfish-ubuntu-x86-64";
-#else
-           path = "stockfish/stockfish-windows-x86-64";
-#endif
-       }
-       cout << "path: " << path << endl;
 
+       #ifdef __linux__ || WIN32
+           path = "stockfish/stockfish-" + getos().toStdString() +  "-" + getarch().toStdString() + "-universal";
+       #else
+           path = "stockfish/stockfish-macos-universal";
+       cout << "path: " << path << endl;
+       #endif
        if (getos() == "windows") path += ".exe";
        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
            std::string current = archive_entry_pathname(entry);
@@ -159,7 +152,7 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
            if (current == path) {
                found = 1;
 
-               std::ofstream file("./engines/" + name.toStdString(), std::ios::binary);
+               std::ofstream file(resource_path + "/engines/" + name.toStdString(), std::ios::binary);
                cout << name.toStdString() << endl;
                if (!file) {
                    std::cerr << "Failed to open output file\n";
@@ -198,7 +191,7 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
            return;
        }
     #ifdef __linux__
-       string command = std::string("chmod 755 ./engines/") + name.toStdString();
+       string command = std::string("chmod 755 " + resource_path + "/engines/") + name.toStdString();
        system(command.c_str());
     #endif
        if (!QMetaObject::invokeMethod(qfuncs, "finished_download", Qt::QueuedConnection)) {
@@ -239,14 +232,13 @@ QString Qmlfuncs::getos() {
     #elif __APPLE__ || __MACH
         return "macos";
     #elif __linux__
-        // ubuntu for stockfish downloads used in config_engine.qml
-        return "ubuntu";
+        return "linux";
     #endif
 }
 
 QString Qmlfuncs::getarch() {
     #if defined(__aarch64__)
-        return "apple-silicon";
+        return "arm64";
     #elif defined(__x86_64__)
         return "x86-64";
     #endif
