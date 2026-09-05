@@ -48,17 +48,22 @@ namespace fs = std::filesystem;
 Qmlfuncs::Qmlfuncs(QObject *parent)
     : QObject{parent}
 {
-    int x = 0;
+    installed = is_installed();
+    #ifdef _WIN32
+        resource_path = "./";
+    #else
+        if (installed) {
+            resource_path = "/usr/local/share/chess_mastermind/";
+        } else {
+            resource_path = "./";
+        }
+    #endif
 }
 
 
 void Qmlfuncs::addGame(QString pgn, QString name) {
 
-#ifdef _WIN32
-    std::string path = ".\\games\\";
-#else
-    std::string path = "./games/";
-#endif
+    string path = resource_path + "games/";
 
     path += name.toStdString().c_str();
     std::ofstream outfile (path);
@@ -138,7 +143,11 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
        if (type != "64-bit") {
            path = "stockfish/stockfish-" + getos().toStdString() + "-" + getarch().toStdString() + "-" + type;
        } else {
+#ifdef __linux__
            path = "stockfish/stockfish-ubuntu-x86-64";
+#else
+           path = "stockfish/stockfish-windows-x86-64";
+#endif
        }
        cout << "path: " << path << endl;
 
@@ -188,9 +197,10 @@ void Qmlfuncs::move_engine(QString name, std::string type) {
            std::cerr << "File not found in archive\n";
            return;
        }
-
+    #ifdef __linux__
        string command = std::string("chmod 755 ./engines/") + name.toStdString();
        system(command.c_str());
+    #endif
        if (!QMetaObject::invokeMethod(qfuncs, "finished_download", Qt::QueuedConnection)) {
            log("Failed to call loading screen method\n");
            }
@@ -206,12 +216,7 @@ int Qmlfuncs::progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlno
 }
 
 QList<QString> Qmlfuncs::getGames() {
-    QString path;
-#ifdef _WIN32
-    path = ".\\games\\";
-#else
-    path = "./games/";
-#endif
+    QString path = QString::fromStdString(resource_path + "games");
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 8)));
@@ -220,12 +225,7 @@ QList<QString> Qmlfuncs::getGames() {
 }
 
 QList<QString> Qmlfuncs::getEngines() {
-    QString path;
-#ifdef _WIN32
-    path = ".\\engines\\";
-#else
-    path = "./engines/";
-#endif
+    QString path = QString::fromStdString(resource_path + "engines");
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
         return_value.append(QString::fromStdString(entry.path().string().erase(0, 10)));

@@ -39,14 +39,35 @@ int main(int argc, char *argv[])
     qRegisterMetaType<game_data>("game_data");
     qRegisterMetaType<move_data>("move_data");
 
-    engine.load(QUrl(QStringLiteral("qml/main.qml")));
+    QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
+                     &app, [](const QUrl &url) {
+                         qCritical() << "QML Engine failed to compile or load target:" << url;
+                         QCoreApplication::exit(1);
+                     }, Qt::QueuedConnection);
 
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    #ifdef _WIN32
+        QString appDir = QCoreApplication::applicationDirPath();
+        qDebug() << appDir << "\n";
+        engine.load(QUrl::fromLocalFile(appDir + "/qml/main.qml"));
+    #else
+        if (is_installed()) {
+            engine.load(QUrl(QStringLiteral("/usr/local/share/chess_mastermind/qml/main.qml")));
+        } else {
+            engine.load(QUrl(QStringLiteral("qml/main.qml")));
+        }
+    #endif
 
+        if (engine.rootObjects().isEmpty()) {
+            qCritical() << "Could not load engine";
+            return -1;
+        }
     QObject *root = engine.rootObjects().first(); // root QML object
     QObject *funcObject = root->findChild<QObject*>("funcs", Qt::FindChildrenRecursively);
 
+    if (!funcObject) {
+        qCritical() << "Backend 'funcs' object not found in main.qml!";
+        return 1;
+    }
 
     for (int i = 0; i < funcObject->metaObject()->methodCount(); i++) {
         QMetaMethod method = funcObject->metaObject()->method(i);

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 include(FetchContent)
 
+include(GNUInstallDirs)
+
 project(chess-mastermind VERSION 0.8 LANGUAGES C CXX)
 
 set(CMAKE_AUTOMOC ON)
@@ -15,6 +17,9 @@ set(QT_QMLCACHEGEN OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_link_options("$<$<CXX_COMPILER_ID:GNU>:-static-libgcc;-static-libstdc++>")
+
 
 set(stockfish_found TRUE)
 if(POLICY CMP0135)
@@ -97,26 +102,22 @@ qt_add_executable(Chess-Mastermind
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
 )
-qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 NO_CACHEGEN QML_FILES qml/main.qml qml/analyzer.qml qml/config_analyzer.qml qml/config_game.qml qml/config_engine.qml
-    SOURCES include/qmlfuncs.h src/qmlfuncs.cpp)
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET Chess-Mastermind APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-#    if(ANDROID)
-#        add_library(Chess-Mastermind SHARED
-#            ${PROJECT_SOURCES}
-#        )
-#        # Define properties for Android with Qt 5 after find_package() calls as:
-#        #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    else()
-#        add_executable(Chess-Mastermind
-#            ${PROJECT_SOURCES}
-#        )
-#    endif()
+qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 NO_CACHEGEN
+    QML_FILES
+    qml/main.qml
+    qml/analyzer.qml
+    qml/config_analyzer.qml
+    qml/config_game.qml
+    qml/config_engine.qml
+
+    SOURCES
+    include/qmlfuncs.h
+    src/qmlfuncs.cpp
+)
+
 target_include_directories(Chess-Mastermind PRIVATE include)
 if (WIN32)
-  target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 archive libcurl)
+  target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 ${CMAKE_CURRENT_SOURCE_DIR}/libarchive.dll.a ${CMAKE_CURRENT_SOURCE_DIR}/libcurl.dll.a)
 else()
   target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 archive curl)
 endif()
@@ -133,3 +134,39 @@ set_target_properties(Chess-Mastermind PROPERTIES
 )
 
 qt_finalize_executable(Chess-Mastermind)
+
+
+# Install commands
+if (WIN32)
+  install(
+    TARGETS Chess-Mastermind
+    RUNTIME DESTINATION .
+)
+else()
+  install(
+    TARGETS Chess-Mastermind
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+endif()
+message(${CMAKE_INSTALL_DATADIR})
+if (WIN32)
+  install(
+    DIRECTORY
+      ${CMAKE_CURRENT_BINARY_DIR}/engines
+      ${CMAKE_CURRENT_BINARY_DIR}/games
+      ${CMAKE_CURRENT_BINARY_DIR}/qml
+      ${CMAKE_CURRENT_BINARY_DIR}/img
+    DESTINATION
+      .
+  )
+else()
+  install(
+    DIRECTORY
+      ${CMAKE_CURRENT_BINARY_DIR}/engines
+      ${CMAKE_CURRENT_BINARY_DIR}/games
+      ${CMAKE_CURRENT_BINARY_DIR}/qml
+      ${CMAKE_CURRENT_BINARY_DIR}/img
+    DESTINATION
+      ${CMAKE_INSTALL_DATADIR}/chess_mastermind/
+  )
+endif()

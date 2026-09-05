@@ -32,8 +32,6 @@ public:
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth, QString threads);
 
-
-
     Q_INVOKABLE QString get_fen();
 
     Q_INVOKABLE move_data move_ahead();
@@ -61,6 +59,8 @@ public:
 
 private:
     Analyzer *ana;
+    bool installed;
+    std::string resource_path;
 
 signals:
     void app_quit();

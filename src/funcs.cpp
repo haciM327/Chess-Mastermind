@@ -18,9 +18,11 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include "../include/funcs.hpp"
 
 using namespace std;
+namespace fs = std::filesystem;
 
 int open_file() {
     ofstream log_file("logfile.txt");
@@ -42,4 +44,15 @@ int log(string msg) {
     log_file.close();
 
     return 0;
+}
+
+bool is_installed() {
+    fs::path img_path = "./img";
+    // 1. fs::exists checks if the path is there at all
+    // 2. fs::is_directory ensures it is a folder, not a file
+    if (fs::exists(img_path) && fs::is_directory(img_path)) {
+        return false;
+    } else {
+        return true;
+    }
 }
