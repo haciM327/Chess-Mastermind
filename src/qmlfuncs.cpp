@@ -138,7 +138,7 @@ void Qmlfuncs::move_engine(QString name) {
 
        std::string path;
 
-       #ifdef __linux__ || WIN32
+       #if  defined(__linux__) || defined(_WIN32)
            path = "stockfish/stockfish-" + getos().toStdString() +  "-" + getarch().toStdString() + "-universal";
        #else
            path = "stockfish/stockfish-macos-universal";
