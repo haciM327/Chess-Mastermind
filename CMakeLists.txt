@@ -41,7 +41,12 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
 )
 
-qt_standard_project_setup(REQUIRES 6.8)
+if (WIN32)
+find_package(CURL REQUIRED)
+find_package(LibArchive REQUIRED)
+endif()
+
+qt_standard_project_setup(REQUIRES 6.6)
 
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
@@ -79,7 +84,7 @@ qt_add_qml_module(Chess-Mastermind URI main VERSION 1.0 NO_CACHEGEN
 
 target_include_directories(Chess-Mastermind PRIVATE include)
 if (WIN32)
-  target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 ${CMAKE_CURRENT_SOURCE_DIR}/libarchive.dll.a ${CMAKE_CURRENT_SOURCE_DIR}/libcurl.dll.a)
+  target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 CURL::libcurl LibArchive::LibArchive)
 else()
   target_link_libraries(Chess-Mastermind PRIVATE Qt6::Widgets Qt6::Gui Qt6::Qml Qt6::Quick Qt6::QuickControls2 archive curl)
 endif()

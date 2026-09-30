@@ -22,9 +22,12 @@
 #include <dirent.h>
 #include <iostream>
 #include <string>
+#include <filesystem>
 #include <curl/curl.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaObject>
+#include <cctype>
+//#include <QVariant>
 #include <archive.h>
 #include <archive_entry.h>
 #include "../include/analyzer.hpp"
@@ -34,6 +37,9 @@
     #include <windows.h>
     #include <tchar.h>
 #else
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/wait.h>
 #endif
 
 using namespace std;
@@ -134,8 +140,8 @@ void Qmlfuncs::move_engine(const QString& name) const
 
        std::string path;
 
-       #ifdef __linux__ || _WIN32
-           path = "stockfish/stockfish-" + getOs().toStdString() +  "-" + getArch().toStdString() + "-universal";
+       #if  defined(__linux__) || defined(_WIN32)
+           path = "stockfish/stockfish-" + getos().toStdString() +  "-" + getarch().toStdString() + "-universal";
        #else
            path = "stockfish/stockfish-macos-universal";
        cout << "path: " << path << endl;
