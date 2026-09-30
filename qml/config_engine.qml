@@ -37,11 +37,11 @@ Rectangle {
             radius: 6
         }
         onClicked: {
-            if (funcs.getos() === "linux") {
-                funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_19/stockfish-linux-" + funcs.getarch() + "-universal.tar.gz", engineName.text)
-            } else if (funcs.getos() === "windows") {
-                funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_19/stockfish-windows-" + funcs.getarch() + "-universal.zip", engineName.text)
-            } else if (funcs.getos() === "macos") {
+            if (funcs.getOs() === "linux") {
+                funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_19/stockfish-linux-" + funcs.getArch() + "-universal.tar.gz", engineName.text)
+            } else if (funcs.getOs() === "windows") {
+                funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_19/stockfish-windows-" + funcs.getArch() + "-universal.zip", engineName.text)
+            } else if (funcs.getOs() === "macos") {
                 funcs.download("https://github.com/official-stockfish/Stockfish/releases/download/sf_19/stockfish-macos-universal.tar.gz", engineName.text)
             } else {
                 console.log("ERROR: computer not supported. Try manually downloading and installing an engine to the engines folder.");

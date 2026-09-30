@@ -22,12 +22,9 @@
 #include <dirent.h>
 #include <iostream>
 #include <string>
-#include <filesystem>
 #include <curl/curl.h>
 #include <QtConcurrent/QtConcurrent>
 #include <QMetaObject>
-#include <cctype>
-//#include <QVariant>
 #include <archive.h>
 #include <archive_entry.h>
 #include "../include/analyzer.hpp"
@@ -37,9 +34,6 @@
     #include <windows.h>
     #include <tchar.h>
 #else
-    #include <unistd.h>
-    #include <sys/types.h>
-    #include <sys/wait.h>
 #endif
 
 using namespace std;
@@ -61,11 +55,12 @@ Qmlfuncs::Qmlfuncs(QObject *parent)
 }
 
 
-void Qmlfuncs::addGame(QString pgn, QString name) {
+void Qmlfuncs::addGame(const QString& pgn, const QString& name) const
+{
 
     string path = resource_path + "games/";
 
-    path += name.toStdString().c_str();
+    path += name.toStdString();
     std::ofstream outfile (path);
     outfile << pgn.toStdString().c_str();
 
@@ -73,7 +68,7 @@ void Qmlfuncs::addGame(QString pgn, QString name) {
 
 }
 
-void Qmlfuncs::download(QString url, QString name) {
+void Qmlfuncs::download(const QString& url, const QString& name) {
     QtConcurrent::run([this, url, name]{
         // Initializes curl
         if (curl_global_init(CURL_GLOBAL_ALL) != CURLE_OK) {
@@ -123,7 +118,8 @@ void Qmlfuncs::download(QString url, QString name) {
     });
 }
 
-void Qmlfuncs::move_engine(QString name) {
+void Qmlfuncs::move_engine(const QString& name) const
+{
     struct archive* a = archive_read_new();
        archive_read_support_format_all(a);
        archive_read_support_filter_all(a);
@@ -138,13 +134,13 @@ void Qmlfuncs::move_engine(QString name) {
 
        std::string path;
 
-       #ifdef __linux__ || WIN32
-           path = "stockfish/stockfish-" + getos().toStdString() +  "-" + getarch().toStdString() + "-universal";
+       #ifdef __linux__ || _WIN32
+           path = "stockfish/stockfish-" + getOs().toStdString() +  "-" + getArch().toStdString() + "-universal";
        #else
            path = "stockfish/stockfish-macos-universal";
        cout << "path: " << path << endl;
        #endif
-       if (getos() == "windows") path += ".exe";
+       if (getOs() == "windows") path += ".exe";
        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
            std::string current = archive_entry_pathname(entry);
            std::cout << "Entry: [" << current << "]\n";
@@ -208,7 +204,8 @@ int Qmlfuncs::progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlno
         return 0;
 }
 
-QList<QString> Qmlfuncs::getGames() {
+QList<QString> Qmlfuncs::getGames() const
+{
     QString path = QString::fromStdString(resource_path + "games");
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
@@ -217,7 +214,8 @@ QList<QString> Qmlfuncs::getGames() {
     return return_value;
 }
 
-QList<QString> Qmlfuncs::getEngines() {
+QList<QString> Qmlfuncs::getEngines() const
+{
     QString path = QString::fromStdString(resource_path + "engines");
     QList<QString> return_value;
     for (const auto & entry : std::filesystem::directory_iterator(path.toStdString())) {
@@ -226,7 +224,7 @@ QList<QString> Qmlfuncs::getEngines() {
     return return_value;
 }
 
-QString Qmlfuncs::getos() {
+QString Qmlfuncs::getOs() {
     #ifdef _WIN32
         return "windows";
     #elif __APPLE__ || __MACH
@@ -236,7 +234,7 @@ QString Qmlfuncs::getos() {
     #endif
 }
 
-QString Qmlfuncs::getarch() {
+QString Qmlfuncs::getArch() {
     #if defined(__aarch64__)
         return "arm64";
     #elif defined(__x86_64__)
@@ -319,10 +317,10 @@ move_data Qmlfuncs::move_back() {
     return data.info_list[current_move];
 }
 
-int Qmlfuncs::get_move_num() {
+int Qmlfuncs::get_move_num() const {
     return current_move;
 }
 
-game_data Qmlfuncs::get_headers() {
+game_data Qmlfuncs::get_headers() const {
     return data.headers;
 }

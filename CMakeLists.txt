@@ -18,6 +18,7 @@ set(QT_QMLCACHEGEN OFF)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
 add_link_options("$<$<CXX_COMPILER_ID:GNU>:-static-libgcc;-static-libstdc++>")
 
 
@@ -40,11 +41,12 @@ find_package(Qt6 REQUIRED COMPONENTS
     QuickControls2
 )
 
-qt_standard_project_setup(REQUIRES 6.6)
+qt_standard_project_setup(REQUIRES 6.8)
 
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/engines)
 
 set(PROJECT_SOURCES
         src/main.cpp

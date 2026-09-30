@@ -14,21 +14,21 @@ public:
     explicit Qmlfuncs(QObject *parent = nullptr);
 
 
-    Q_INVOKABLE void addGame(QString pgn, QString name);
+    Q_INVOKABLE void addGame(const QString& pgn, const QString& name) const;
 
-    Q_INVOKABLE QList<QString> getGames();
+    Q_INVOKABLE QList<QString> getGames() const;
 
-    Q_INVOKABLE void download(QString url, QString name);
+    Q_INVOKABLE void download(const QString& url, const QString& name);
 
-    void move_engine(QString name);
+    void move_engine(const QString& name) const;
 
     static int progress_callback(void *clientp,curl_off_t dltotal,curl_off_t dlnow,curl_off_t ultotal,curl_off_t ulnow);
 
-    Q_INVOKABLE QList<QString> getEngines();
+    Q_INVOKABLE QList<QString> getEngines() const;
 
-    Q_INVOKABLE QString getos();
+    Q_INVOKABLE static QString getOs();
 
-    Q_INVOKABLE QString getarch();
+    Q_INVOKABLE static QString getArch();
 
     Q_INVOKABLE void runAnalyzer(QString game, QString engine, QString depth, QString threads);
 
@@ -38,11 +38,11 @@ public:
 
     Q_INVOKABLE move_data move_back();
 
-    Q_INVOKABLE int get_move_num();
+    Q_INVOKABLE int get_move_num() const;
 
-    Q_INVOKABLE game_data get_headers();
+    Q_INVOKABLE game_data get_headers() const;
 
-    bool port;
+    bool port{};
 
     QString fen;
 
@@ -58,7 +58,7 @@ public:
     };
 
 private:
-    Analyzer *ana;
+    Analyzer *ana{};
     bool installed;
     std::string resource_path;
 
