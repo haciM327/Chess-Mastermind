@@ -51,7 +51,9 @@ qt_standard_project_setup(REQUIRES 6.6)
 file(COPY ./games DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./img DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY ./qml DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ./fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/engines)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/logs)
 
 set(PROJECT_SOURCES
         src/main.cpp
@@ -60,6 +62,8 @@ set(PROJECT_SOURCES
         include/chess.hpp
         include/funcs.hpp
         src/funcs.cpp
+        src/Logger.cpp
+        include/Logger.hpp
         #mainwindow.cpp
         #mainwindow.h
         #mainwindow.ui

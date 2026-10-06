@@ -9,6 +9,7 @@
 #include <QStringList>
 #include <QMetaType>
 #include <QObject>
+#include "Logger.hpp"
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -80,29 +81,34 @@ class Analyzer : public QObject {
 
     Q_OBJECT
 
-    public:
-        Analyzer(const std::string& engine_path, int depth, const std::string& game_path, int threads);
-        all_data data;
-        #ifdef _WIN32
-            PROCESS_INFORMATION pi;
-        #else
-            pid_t pid;
-        #endif
+public:
+    Analyzer(const std::string& engine_path, int depth, const std::string& game_path, int threads);
 
-        void setup_pipes();
+#ifdef _WIN32
+    PROCESS_INFORMATION pi;
+#else
+    pid_t pid;
+#endif
 
-        void quit();
+    void setup_pipes();
 
-    private:
-        int depth, threads;
-        std::string engine_path, game_path;
+    void quit();
 
-        // Functions
-        std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
-        void analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads);
+    all_data data;
 
-        game_data read_pgn(const std::string& f);
-        std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
+private:
+    Logger* logger;
+
+
+    int depth, threads;
+    std::string engine_path, game_path;
+
+    // Functions
+    std::vector<int> get_eval(FILE* &read_pipe, FILE* &write_pipe, int depth);
+    void analyze(int read_fd, int write_fd, const std::string& engine_path, int depth, const std::string& game_path, int threads);
+
+    game_data read_pgn(const std::string& f);
+    std::vector<int> get_attackers(std::string fen, std::string targetSquare_string, chess::Board &board);
 
     signals:
         void finished();

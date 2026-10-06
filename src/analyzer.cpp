@@ -64,6 +64,10 @@ Analyzer::Analyzer(const std::string& _engine_path, int _depth, const std::strin
     threads = _threads;
     engine_path = _engine_path;
     game_path = _game_path;
+    logger = new Logger();
+    if (!logger->openFile()) {
+        std::cerr << "Failed to initialize logger." << std::endl;
+    }
 }
 
 // Function to communicate with engine
@@ -89,7 +93,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
     // Read and print engine's response
     char buffer[4096];
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        log("engine: " + string(buffer));
+        logger->log("engine: " + string(buffer));
         if (strstr(buffer, "uciok")) {
             break;
         }
@@ -117,7 +121,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
     fflush(write_pipe);
 
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        log("engine: " + string(buffer));
+        logger->log("engine: " + string(buffer));
         if (strstr(buffer, "readyok")) {
             break;
         }
@@ -133,7 +137,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
     fflush(write_pipe);
 
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        log("engine: " + string(buffer));
+        logger->log("engine: " + string(buffer));
         if (strstr(buffer, "readyok")) {
             break;
         }
@@ -155,7 +159,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
 
     // Reads the engine's response and puts it into a vector of lines
     while (fgets(buffer, sizeof(buffer), read_pipe)) {
-        log("engine: " + string(buffer));
+        logger->log("engine: " + string(buffer));
         lines.push_back(buffer);
         if (strstr(buffer, "bestmove")) {
             break;
@@ -201,7 +205,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
         counter = counter + 1;
         // Updates the progress bar
         if (!QMetaObject::invokeMethod(qfuncs, "reportProgress", Qt::QueuedConnection, Q_ARG(int, (counter/(_data.moves.size())*100)))) {
-            log("Failed to call loading screen method\n");
+            logger->log("Failed to call loading screen method\n");
         }
 
         std::string move = qStrmove.toStdString();
@@ -265,7 +269,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
         fflush(write_pipe);
 
         while (fgets(buffer, sizeof(buffer), read_pipe)) {
-            log("engine: " + string(buffer));
+            logger->log("engine: " + string(buffer));
             lines.push_back(buffer);
             if (strstr(buffer, "readyok") != NULL) {
                 break;
@@ -279,7 +283,7 @@ void Analyzer::analyze(int read_fd, int write_fd, const std::string& engine_path
 
         // Reads the engine output
         while (fgets(buffer, sizeof(buffer), read_pipe) != NULL) {
-            log("engine: " + string(buffer));
+            logger->log("engine: " + string(buffer));
             lines.push_back(buffer);
             if (strstr(buffer, "bestmove") != NULL) {
                 break;

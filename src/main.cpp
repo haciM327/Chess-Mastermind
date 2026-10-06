@@ -28,9 +28,6 @@
 
 int main(int argc, char *argv[])
 {
-    // Resets log
-    open_file();
-
 
     QGuiApplication app(argc, argv);
     QQuickStyle::setStyle("Basic");
@@ -69,9 +66,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    for (int i = 0; i < funcObject->metaObject()->methodCount(); i++) {
+    /*for (int i = 0; i < funcObject->metaObject()->methodCount(); i++) {
         QMetaMethod method = funcObject->metaObject()->method(i);
-    }
+    }*/
     if (!funcObject) {
         qWarning() << "backend object not found";
     }
